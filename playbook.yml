@@ -43,11 +43,13 @@
       apt_key:
         url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
         state: present
+      become: true
 
     - name: Add specified repository into sources list for brave
       apt_repository:
         repo: deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
         state: present
+      become: true
 
     - name: Install pacakges
       become: yes
