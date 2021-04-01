@@ -1,0 +1,22 @@
+
+[core]
+	editor = vim
+[user]
+	name = Mustafa Mujahid
+	email = mustafa.mujahid@tradebyte.com
+[alias]
+	st = status
+	co = checkout
+	bn = branch -a
+	poll = log --pretty=oneline
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	find = log --pretty=\"format:%Cgreen%H %Cblue%s\" --name-status --grep
+[push]
+	default = simple
+[gui]
+	spellingdictionary = none
+	wmstate = normal
+	geometry = 1855x1022+65+24 628 294
+[tig]
+	line-graphics = no
+	main-view = line-number:no,interval=5 id:no date:default author:full commit-title:yes,refs,overflow=no

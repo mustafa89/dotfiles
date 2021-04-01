@@ -1,0 +1,25 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- clean: ['~', '~/.config']
+
+- link:
+    ~/.bashrc:
+        force: true
+        path: bashrc
+    ~/.bash_profile: bash_profile
+    ~/.dotfiles: ''
+    ~/.gitconfig: gitconfig
+    ~/.vim: vim
+    ~/.vimrc: vim/.vimrc
+    ~/.p10k.zsh: p10k.zsh
+    ~/.config/nvim: nvim/init.vim
+    ~/.zshrc:
+      force: true
+      path: zshrc
+
+- shell:
+    - ['git submodule update --init --recursive', 'Installing submodules... ']
+    - ['fonts/install.sh', 'Install powerline fonts... ']

@@ -1,0 +1,116 @@
+---
+
+- hosts: localhost
+  remote_user: ubuntu
+  connection: local
+  become: false
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    users:
+      - username: mum
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+      become: true
+      changed_when: false
+
+    - name: Upgrade system
+      apt:
+        upgrade: dist
+      become: true
+
+    - name: Remove unused packages
+      apt:
+        autoremove: true
+      become: true
+
+    - name: Clean apt cache
+      apt:
+        autoclean: true
+      become: true
+
+    - name: configure sudoers
+      become: true
+      become_user: root
+      lineinfile:
+        path: /etc/sudoers
+        line: "{{ users.username }} ALL=(ALL) NOPASSWD:ALL"
+        regexp: "^{{ users.username }}\\s+"
+
+    - name: Install pacakges
+      become: yes
+      apt:
+          name: "{{ packages }}"
+          state: present
+          update_cache: yes
+      vars:
+          packages:
+            - feh
+            - compton
+            - flameshot
+            - brave-browser
+            - pulseaudio
+            - pulseaudio-utils
+            - redshift-gtk
+            - vim
+            - neovim
+            - docker
+            - tig
+            - i3
+            - i3-lock
+            - zsh
+            - zsh-syntax-highlighting
+            - rofi
+            - breeze-cursor-theme
+            - breeze-icon-theme
+            - gtk3-engines-breeze
+            - lxappearance
+            - python3
+            - python3-pip
+            - python3-venv
+            - virtualenv
+            - pylint3
+            - curl
+            - wget
+            - tree
+            - traceroute
+            - tcpdump
+            - nettools
+            - network-manager-openconnect
+            - network-manager-openvpn
+            - network-manager
+            - npm
+            - manpages
+            - blueman
+            - cmatrix
+            - xrandr
+            - arandr
+
+    - name: install gaps for i3
+      command: /bin/bash ./gaps/gaps.sh > /dev/stdout
+
+    - name: install dotbot
+      command: pip3 install dotbot
+
+    - name: install oh-my-zsh
+      command: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+    - name: install powerlevel10k
+      command: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+    - name: install Node version manager
+      command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+    
+    - name: install vim plugins
+      command: /usr/bin/vim -f -E -s -c "source ~/.vimrc" +PlugInstall +qall
+      register: vim_plugins_stdout
+      check_mode: false
+      changed_when: vim_plugins_stdout.stdout_lines|length != 0
+   
+    - name: set default shell for user
+      user:
+        name: '{{ users.username }}'
+        shell: /bin/zsh
+      with_items: "{{ users }}"
