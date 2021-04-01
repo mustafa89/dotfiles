@@ -102,6 +102,15 @@
 
     - name: install Node version manager
       command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+
+    - name: Need the light binary to control screen brightness
+      copy:
+        src: ./light
+        dest: /usr/local/bin/light
+        owner: root
+        group: root
+        mode: '6755'
+      become: yes
     
     - name: install vim plugins
       command: /usr/bin/vim -f -E -s -c "source ~/.vimrc" +PlugInstall +qall

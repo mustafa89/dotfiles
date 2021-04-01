@@ -16,6 +16,7 @@
     ~/.vimrc: vim/.vimrc
     ~/.p10k.zsh: p10k.zsh
     ~/.config/nvim: nvim/init.vim
+    ~/.config/i3: i3
     ~/.zshrc:
       force: true
       path: zshrc
