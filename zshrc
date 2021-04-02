@@ -91,6 +91,7 @@ ubuntu
 colorize
 zsh-autosuggestions
 history-substring-search
+zsh-completions
 colored-man-pages
 )
 
