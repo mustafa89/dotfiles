@@ -55,15 +55,17 @@
       apt_key:
         keyserver: keyserver.ubuntu.com
         id: BDA0E4BA891B327BB00DF1E076458020C35556DC
+      tags: test
 
     - name: Add specified repository into sources list for i3-gaps
       apt_repository:
-        repo:  "{{ items }}"
+        repo:  "{{ item }}"
         state: present
       with_items:
         - deb http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
         - deb-src http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main 
-      become: true  
+      become: true
+      tags: test
 
     - name: Install packages
       become: yes
@@ -161,4 +163,3 @@
       user:
         name: "{{ users.username }}"
         shell: /bin/zsh
-      with_items: "{{ users }}"
