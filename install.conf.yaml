@@ -10,7 +10,6 @@
         force: true
         path: bashrc
     ~/.bash_profile: bash_profile
-    ~/.dotfiles: ''
     ~/.gitconfig: gitconfig
     ~/.vim: vim
     ~/.vimrc:

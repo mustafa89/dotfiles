@@ -50,6 +50,20 @@
         repo: deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
         state: present
       become: true
+      
+    - name: Add an apt key by id from a keyserver for i3 gaps
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: BDA0E4BA891B327BB00DF1E076458020C35556DC
+
+    - name: Add specified repository into sources list for i3-gaps
+      apt_repository:
+        repo:  "{{ items }}"
+        state: present
+      with_items:
+        - deb http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
+        - deb-src http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main 
+      become: true  
 
     - name: Install packages
       become: yes
@@ -74,6 +88,7 @@
           - tig
           - i3
           - i3lock
+          - i3-gaps
           - zsh
           - zsh-syntax-highlighting
           - rofi
@@ -101,9 +116,6 @@
           - cmatrix
           - x11-xserver-utils
           - arandr
-
-    - name: install gaps for i3
-      command: /bin/bash ./gaps/gaps.sh > /dev/stdout
 
     - name: install dotbot
       command: pip3 install dotbot
