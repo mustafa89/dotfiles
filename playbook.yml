@@ -134,7 +134,7 @@
         get_url:
           url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
           dest: /tmp
-          mode: '0647'
+          mode: '0747'
         when: not stat_oh_my_zsh_result.stat.exists
 
       - name: Check if installer exists
