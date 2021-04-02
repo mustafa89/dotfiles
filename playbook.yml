@@ -166,18 +166,14 @@
       tags: pk10
 
     - block:
-      # - name: Check if zsh-suggestions exists
-      #   stat:
-      #     path: "{{ item }}"
-      #   with_items:
-      #     - ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-      #     - ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
-      #     - ~/.oh-my-zsh/custom/plugins/zsh-completions
-      #   register: stat_sugg_result
-      
-      # - name: debug 
-      #   debug: 
-      #     var: stat_sugg_result.results[0].stat
+      - name: Check if zsh-suggestions exists
+        stat:
+          path: "{{ item }}"
+        with_items:
+          - ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+          - ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
+          - ~/.oh-my-zsh/custom/plugins/zsh-completions
+        register: stat_sugg_result
 
       - name: install zsh-autosuggestions
         command: "git clone {{ item.repo }} ~/.oh-my-zsh/custom/plugins/{{ item.name }}"
@@ -186,10 +182,10 @@
           - { repo: 'https://github.com/zsh-users/zsh-history-substring-search', name: zsh-history-substring-search }
           - { repo: 'https://github.com/zsh-users/zsh-completions', name: zsh-completions }
 
-        # when: # not the best way but what the heck.
-        #   - not stat_sugg_result.results[0].stat.exists 
-        #   - not stat_sugg_result.results[1].stat.exists
-        #   - not stat_sugg_result.results[2].stat.exists
+        when: # not the best way but what the heck.
+          - not stat_sugg_result.results[0].stat.exists 
+          - not stat_sugg_result.results[1].stat.exists
+          - not stat_sugg_result.results[2].stat.exists
 
       tags: zsh-plugs
 
