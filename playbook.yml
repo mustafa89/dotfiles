@@ -168,12 +168,24 @@
     - block:
       - name: Check if zsh-suggestions exists
         stat:
-          path: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+          path: "{{ item }}"
+        with_items:
+          - ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+          - ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
         register: stat_sugg_result
+      
+      - name: debug 
+        debug: 
+          var: stat_sugg_result.results[0].stat
 
-      - name: install powerlevel10k
-        command: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-        when: not stat_sugg_result.stat.exists
+      - name: install zsh-autosuggestions
+        command: "git clone {{ item.repo }} ~/.oh-my-zsh/custom/plugins/{{ item.name }}"
+        with_items:
+          - { repo: 'https://github.com/zsh-users/zsh-autosuggestions', name: zsh-autosuggestions }
+          - { repo: 'https://github.com/zsh-users/zsh-history-substring-search', name: zsh-history-substring-search }
+        when: # not the best way but what the heck.
+          - not stat_sugg_result.results[0].stat.exists 
+          - not stat_sugg_result.results[1].stat.exists
       tags: zsh-plugs
 
     - block:

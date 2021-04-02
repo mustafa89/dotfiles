@@ -90,6 +90,7 @@ vagrant-prompt
 ubuntu
 colorize
 zsh-autosuggestions
+history-substring-search
 colored-man-pages
 )
 
