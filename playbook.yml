@@ -230,6 +230,11 @@
         mode: "0644"
       become: yes
 
+    - name: Ensures xorg.conf.d directory exists
+      file:
+        path: /etc/X11/xorg.conf.d 
+        state: directory
+
     - name: COPY over the touchpad config
       copy:
         src: touchpadx11
