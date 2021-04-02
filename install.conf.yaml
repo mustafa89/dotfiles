@@ -28,3 +28,4 @@
 - shell:
     - ['git submodule update --init --recursive', 'Installing submodules... ']
     - ['fonts/install.sh', 'Install powerline fonts... ']
+    - ['curl -L git.io/antigen > ~/antigen.zsh', installing antigen]

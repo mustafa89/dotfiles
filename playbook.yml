@@ -95,6 +95,8 @@
           - i3-gaps
           - zsh
           - zsh-syntax-highlighting
+          - zsh-antigen
+          - gem
           - rofi
           - breeze-cursor-theme
           - breeze-icon-theme

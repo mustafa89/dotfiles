@@ -9,7 +9,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH="/home/mum/.oh-my-zsh"
+  export ZSH="/home/mmujahid/.oh-my-zsh"
 
 
 # setup export for node nvm
@@ -130,7 +130,7 @@ alias vdes='vagrant destroy'
 alias vrel='vagrant reload'
 alias vhal='vagrant halt'
 alias vst='vagrant status'
-alias wwp='cd /home/mum/Downloads/projects'
+alias wwp='cd /home/mmujahid/Downloads/projects'
 alias ww='cd /sysops/infrastructure'
 alias wwt='cd /sysops/temp/infrastructure'
 alias gst="git status"
@@ -149,7 +149,7 @@ alias gollf='git log --name-only --pretty=oneline --full-index'
 alias cat='bat --paging never'
 alias rcat='cat'
 alias gf='git fetch'
-alias aws1='cd /home/mum/aws'
+alias aws1='cd /home/mmujahid/aws'
 alias awsm='cd /cps/aws-accounts-master'
 alias cps='cd /cps'
 alias infra='cd /cps/infrastructure'
@@ -161,8 +161,8 @@ alias inv='vim /sysops/infrastructure/environment/production/inventory.yml'
 alias copy="xclip -sel clip"
 alias tv="terraform validate"
 alias tf="terraform fmt"
-alias wquit="sudo python /home/mum/wqavim.py"
-alias tquit="sudo python /home/mum/terms.py"
+alias wquit="sudo python /home/mmujahid/wqavim.py"
+alias tquit="sudo python /home/mmujahid/terms.py"
 alias docs="/cps/docs/content/docs"
 alias gs="git status"
 
@@ -206,7 +206,7 @@ EOF
 }
 function wttr(){ curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Ansbach}"}
 alias my='mycli --login-path'
-source $(dirname $(gem which colorls))/tab_complete.sh
+#source $(dirname $(gem which colorls))/tab_complete.sh
 
 
 autoload -U +X bashcompinit && bashcompinit
@@ -217,6 +217,6 @@ complete -o nospace -C /usr/local/bin/terraform terraform
 
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
-export GOPATH=/home/mum/go/packages
+export GOPATH=/home/mmujahid/go/packages
 export PATH=$PATH:$GOPATH/bin
-export GOPATH=$GOPATH:/home/mum/aws/go
+export GOPATH=$GOPATH:/home/mmujahid/aws/go
