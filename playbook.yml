@@ -207,7 +207,5 @@
       changed_when: vim_plugins_stdout.stdout_lines|length != 0
 
     - name: set default shell for user
-      user:
-        name: "{{ users.username }}"
-        shell: /bin/zsh
+      shell: chsh -s /bin/zsh
       become: yes
