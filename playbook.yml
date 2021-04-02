@@ -234,6 +234,7 @@
       file:
         path: /etc/X11/xorg.conf.d 
         state: directory
+      become: yes
 
     - name: COPY over the touchpad config
       copy:
