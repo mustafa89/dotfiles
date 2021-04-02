@@ -10,8 +10,8 @@
     ~/.gitconfig: gitconfig
     ~/.vim: vim
     ~/.p10k.zsh: p10k.zsh
-    ~/.config/nvim: nvim/init.vim
-    ~/.config/gtk-3.0: gtksettings.ini
+    ~/.config/nvim/init.vim: nvim/init.vim
+    ~/.config/gtk-3.0/settings.ini: gtksettings.ini
     ~/.config/i3:
       force: true 
       path: i3
