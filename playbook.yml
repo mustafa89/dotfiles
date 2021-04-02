@@ -166,6 +166,17 @@
       tags: pk10
 
     - block:
+      - name: Check if zsh-suggestions exists
+        stat:
+          path: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        register: stat_sugg_result
+
+      - name: install powerlevel10k
+        command: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        when: not stat_sugg_result.stat.exists
+      tags: zsh-plugs
+
+    - block:
       - name: Check if nvm exists
         stat:
           path: ~/.nvm/install.sh

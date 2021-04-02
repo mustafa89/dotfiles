@@ -89,6 +89,7 @@ vagrant
 vagrant-prompt
 ubuntu
 colorize
+zsh-autosuggestions
 colored-man-pages
 )
 
