@@ -148,14 +148,36 @@
           - stat_oh_my_zsh_installer.stat.exists
           - not stat_oh_my_zsh_result.stat.exists
       tags: zsh
+    - block:
+      - name: Check if .powerlevel10k exists
+        stat:
+          path: ~/.oh-my-zsh/custom/themes/powerlevel10k
+        register: stat_pk10_result
 
-    - name: install powerlevel10k
-      command: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+      - name: install powerlevel10k
+        command: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
+        when: not stat_pk10_result.stat.exists
+      tags: pk10
 
-    - name: install Node version manager
-      command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+    - block:
+      - name: Check if nvm exists
+        stat:
+          path: ~/.nvm/install.sh
+        register: stat_nvm_result
 
-    - name: install dotbot
+      - name: Download nvm installer
+        get_url:
+          url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh
+          dest: /tmp/nvm_install.sh
+          mode: '0747'
+        when: not stat_nvm_result.stat.exists
+
+      - name: Execute the nvm_installer.sh
+        shell: /tmp/nvm_install.sh
+        when: not stat_nvm_result.stat.exists
+      tags: nvm
+
+    - name: run dotbot
       command: dotbot -c install.conf.yaml
 
     - name: Need the light binary to control screen brightness
