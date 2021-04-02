@@ -50,7 +50,7 @@
         repo: deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
         state: present
       become: true
-      
+
     - name: Add an apt key by id from a keyserver for i3 gaps
       apt_key:
         keyserver: keyserver.ubuntu.com
@@ -64,7 +64,7 @@
         state: present
       with_items:
         - deb http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
-        - deb-src http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main 
+        - deb-src http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
       become: true
       tags: gaps
 
@@ -123,7 +123,7 @@
 
     - name: install dotbot
       shell: pip3 install dotbot
-    
+
     - name: Install bat for cat
       apt:
         deb: https://github.com/sharkdp/bat/releases/download/v0.18.0/bat-musl_0.18.0_amd64.deb
@@ -134,7 +134,7 @@
         stat:
           path: ~/.oh-my-zsh
         register: stat_oh_my_zsh_result
-    
+
       - name: Download oh-my-zsh installer
         get_url:
           url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
@@ -146,10 +146,10 @@
         stat:
           path: /tmp/install.sh
         register: stat_oh_my_zsh_installer
-        
+
       - name: Execute the zsh-installer.sh
         shell: /tmp/install.sh --unattended
-        when: 
+        when:
           - stat_oh_my_zsh_installer.stat.exists
           - not stat_oh_my_zsh_result.stat.exists
       tags: zsh
@@ -173,6 +173,7 @@
           - ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
           - ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
           - ~/.oh-my-zsh/custom/plugins/zsh-completions
+          - ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
         register: stat_sugg_result
 
       - name: install zsh-autosuggestions
@@ -181,11 +182,12 @@
           - { repo: 'https://github.com/zsh-users/zsh-autosuggestions', name: zsh-autosuggestions }
           - { repo: 'https://github.com/zsh-users/zsh-history-substring-search', name: zsh-history-substring-search }
           - { repo: 'https://github.com/zsh-users/zsh-completions', name: zsh-completions }
-
+          - { repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git', name: zsh-syntax-highlighting }
         when: # not the best way but what the heck.
-          - not stat_sugg_result.results[0].stat.exists 
+          - not stat_sugg_result.results[0].stat.exists
           - not stat_sugg_result.results[1].stat.exists
           - not stat_sugg_result.results[2].stat.exists
+          - not stat_sugg_result.results[3].stat.exists
 
       tags: zsh-plugs
 
