@@ -6,21 +6,21 @@
 - clean: ['~', '~/.config']
 
 - link:
-    ~/.bashrc:
-        force: true
-        path: bashrc
     ~/.bash_profile: bash_profile
     ~/.gitconfig: gitconfig
     ~/.vim: vim
-    ~/.vimrc:
-      force: true 
-      path: vim/.vimrc
     ~/.p10k.zsh: p10k.zsh
     ~/.config/nvim: nvim/init.vim
     ~/.config/i3:
       force: true 
       path: i3
     ~/.screenlayout: screenlayout
+    ~/.vimrc:
+      force: true 
+      path: vim/.vimrc
+    ~/.bashrc:
+      force: true
+      path: bashrc
     ~/.zshrc:
       force: true
       path: zshrc
