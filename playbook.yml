@@ -127,6 +127,7 @@
     - name: Install bat for cat
       apt:
         deb: https://github.com/sharkdp/bat/releases/download/v0.18.0/bat-musl_0.18.0_amd64.deb
+      become: yes
 
     - block:
       - name: Check if .oh-my-zsh exists
