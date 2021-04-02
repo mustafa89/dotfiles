@@ -144,7 +144,9 @@
         
       - name: Execute the zsh-installer.sh
         shell: /tmp/install.sh --unattended
-        when: stat_oh_my_zsh_installer.stat.exists
+        when: 
+          - stat_oh_my_zsh_installer.stat.exists
+          - not stat_oh_my_zsh_result.stat.exists
       tags: zsh
 
     - name: install powerlevel10k
