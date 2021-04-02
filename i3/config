@@ -234,7 +234,7 @@ colors {
 #exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/originalchroma.png
 #exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/superchroma.png
 #exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/cyberpunk.jpg
-exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/Wallpapers/dystopis1.jpg
+exec_always --no-startup-id feh --bg-scale ~/Pictures/tok.jpg
 #exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/nameless.jpg
 #exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/sekiro.jpg
 #exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/sunset.jpg
