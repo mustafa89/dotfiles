@@ -91,7 +91,7 @@
           - tree
           - traceroute
           - tcpdump
-          - nettools
+          - net-tools
           - network-manager-openconnect
           - network-manager-openvpn
           - network-manager
