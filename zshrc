@@ -88,9 +88,7 @@ git
 vagrant
 vagrant-prompt
 ubuntu
-zsh-syntax-highlighting
 colorize
-zsh-autosuggestions
 colored-man-pages
 )
 
