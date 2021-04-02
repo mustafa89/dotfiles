@@ -210,3 +210,4 @@
       user:
         name: "{{ users.username }}"
         shell: /bin/zsh
+      become: yes
