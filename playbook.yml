@@ -122,8 +122,8 @@
           - arandr
 
     - name: install dotbot
-      command: pip3 install dotbot
-    
+      shell: pip3 install dotbot
+
     - block:
       - name: Check if .oh-my-zsh exists
         stat:
@@ -148,6 +148,7 @@
           - stat_oh_my_zsh_installer.stat.exists
           - not stat_oh_my_zsh_result.stat.exists
       tags: zsh
+
     - block:
       - name: Check if .powerlevel10k exists
         stat:
@@ -178,7 +179,7 @@
       tags: nvm
 
     - name: run dotbot
-      command: dotbot -c install.conf.yaml
+      command: ~/.local/bin/dotbot -c install.conf.yaml
 
     - name: Need the light binary to control screen brightness
       copy:
