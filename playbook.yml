@@ -51,7 +51,7 @@
         state: present
       become: true
 
-    - name: Install pacakges
+    - name: Install packages
       become: yes
       apt:
         name: "{{ packages }}"
@@ -73,7 +73,7 @@
           - docker
           - tig
           - i3
-          - i3-lock
+          - i3lock
           - zsh
           - zsh-syntax-highlighting
           - rofi
@@ -99,7 +99,7 @@
           - manpages
           - blueman
           - cmatrix
-          - xrandr
+          - x11-xserver-utils
           - arandr
 
     - name: install gaps for i3
@@ -117,6 +117,9 @@
     - name: install Node version manager
       command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 
+    - name: install dotbot
+      command: dotbot -c install.conf.yaml
+
     - name: Need the light binary to control screen brightness
       copy:
         src: ./light
@@ -125,6 +128,16 @@
         group: root
         mode: "6755"
       become: yes
+
+    - name: COPY over the xorg.conf
+      copy:
+        src: ./xorg.conf
+        dest: /etc/X11/xorg.conf
+        owner: root
+        group: root
+        mode: "0644"
+      become: yes
+
 
     - name: install vim plugins
       command: /usr/bin/vim -f -E -s -c "source ~/.vimrc" +PlugInstall +qall
