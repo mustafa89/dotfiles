@@ -230,7 +230,7 @@
         mode: "0644"
       become: yes
 
-  - name: COPY over the touchpad config
+    - name: COPY over the touchpad config
       copy:
         src: touchpadx11
         dest: /etc/X11/xorg.conf.d/90-touchpad.conf
