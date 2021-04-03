@@ -254,3 +254,9 @@
     - name: set default shell for user
       shell: chsh -s /bin/zsh
       become: yes
+
+    - name: Restore terminal profiles
+      shell: |
+        dconf load /org/gnome/terminal/legacy/profiles:/:7fcf6e99-a228-4688-b1cc-982f03c07788/ < terminaltheme-dark-profile.dconf
+        dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < terminaltheme-profile.dconf
+      tags: dconf
