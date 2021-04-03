@@ -39,34 +39,53 @@
         regexp: "^{{ users.username }}\\s+"
       with_items: "{{ users }}"
 
-    - name: Add an Apt signing key for the brave browser
-      apt_key:
-        url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
-        state: present
-      become: true
+    - block:
+      - name: Add an Apt signing key for the brave browser
+        apt_key:
+          url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
+          state: present
+        become: true
 
-    - name: Add specified repository into sources list for brave
-      apt_repository:
-        repo: deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
-        state: present
-      become: true
+      - name: Add specified repository into sources list for brave
+        apt_repository:
+          repo: deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
+          state: present
+        become: true
+      tags: brave
 
-    - name: Add an apt key by id from a keyserver for i3 gaps
-      apt_key:
-        keyserver: keyserver.ubuntu.com
-        id: BDA0E4BA891B327BB00DF1E076458020C35556DC
-      become: true
+    - block:
+      - name: Add an apt key by id from a keyserver for i3 gaps
+        apt_key:
+          keyserver: keyserver.ubuntu.com
+          id: BDA0E4BA891B327BB00DF1E076458020C35556DC
+        become: true
+
+      - name: Add specified repository into sources list for i3-gaps
+        apt_repository:
+          repo:  "{{ item }}"
+          state: present
+        with_items:
+          - deb http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
+          - deb-src http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
+        become: true
       tags: gaps
 
-    - name: Add specified repository into sources list for i3-gaps
-      apt_repository:
-        repo:  "{{ item }}"
-        state: present
-      with_items:
-        - deb http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
-        - deb-src http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
-      become: true
-      tags: gaps
+    - block:
+      - name: Add an apt key by id from a keyserver for Neovim
+        apt_key:
+          keyserver: keyserver.ubuntu.com
+          id: 9DBB0BE9366964F134855E2255F96FCF8231B6DD
+        become: true
+
+      - name: Add specified repository into sources list for Neovim
+        apt_repository:
+          repo:  "{{ item }}"
+          state: present
+        with_items:
+          - deb http://ppa.launchpad.net/neovim-ppa/stable/ubuntu bionic main
+          - deb-src http://ppa.launchpad.net/neovim-ppa/stable/ubuntu bionic main
+        become: true
+      tags: neovim
 
     - name: Install packages
       become: yes
@@ -177,18 +196,20 @@
         register: stat_sugg_result
 
       - name: install zsh-autosuggestions
-        command: "git clone {{ item.repo }} ~/.oh-my-zsh/custom/plugins/{{ item.name }}"
-        with_items:
-          - { repo: 'https://github.com/zsh-users/zsh-autosuggestions', name: zsh-autosuggestions }
-          - { repo: 'https://github.com/zsh-users/zsh-history-substring-search', name: zsh-history-substring-search }
-          - { repo: 'https://github.com/zsh-users/zsh-completions', name: zsh-completions }
-          - { repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git', name: zsh-syntax-highlighting }
-        when: # not the best way but what the heck.
-          - not stat_sugg_result.results[0].stat.exists
-          - not stat_sugg_result.results[1].stat.exists
-          - not stat_sugg_result.results[2].stat.exists
-          - not stat_sugg_result.results[3].stat.exists
+        command: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        when: not stat_sugg_result.results[0].stat.exists
 
+      - name: install zsh-autosuggestions
+        command: git clone https://github.com/zsh-users/zsh-history-substring-search ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
+        when: not stat_sugg_result.results[1].stat.exists
+
+      - name: install zsh-autosuggestions
+        command: git clone https://github.com/zsh-users/zsh-completion ~/.oh-my-zsh/custom/plugins/zsh-completion
+        when: not stat_sugg_result.results[2].stat.exists
+
+      - name: install zsh-autosuggestions
+        command: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        when: not stat_sugg_result.results[3].stat.exists
       tags: zsh-plugs
 
     - block:
@@ -232,7 +253,7 @@
 
     - name: Ensures xorg.conf.d directory exists
       file:
-        path: /etc/X11/xorg.conf.d 
+        path: /etc/X11/xorg.conf.d
         state: directory
       become: yes
 
