@@ -19,7 +19,7 @@
     ~/.screenlayout: screenlayout
     ~/.vimrc:
       force: true 
-      path: vim/.vimrc
+      path: vim/vimrc
     ~/.bashrc:
       force: true
       path: bashrc
@@ -30,3 +30,4 @@
 - shell:
     - ['git submodule update --init --recursive', 'Installing submodules... ']
     - ['fonts/install.sh', 'Install powerline fonts... ']
+    - ['pip3 install pynvim', 'Install pynvim for neovim... ']

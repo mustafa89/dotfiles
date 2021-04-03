@@ -93,8 +93,8 @@ syntax enable
 "----------------------------------------------------------
 " Neovim's Python provider
 "----------------------------------------------------------
-let g:python_host_prog  = '/usr/bin/python'
-let g:python3_host_prog = '/usr/bin/python3'
+"let g:python_host_prog  = '/usr/bin/python'
+let g:python_host_prog = '/usr/bin/python3'
 
 
 let g:deoplete#omni_patterns = {}

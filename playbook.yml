@@ -115,6 +115,7 @@
           - zsh-antigen
           - gem
           - rofi
+          - gnome-tweak-tool
           - breeze-cursor-theme
           - breeze-icon-theme
           - gtk3-engines-breeze
@@ -196,18 +197,18 @@
         register: stat_sugg_result
 
       - name: install zsh-autosuggestions
-        command: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        command: git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
         when: not stat_sugg_result.results[0].stat.exists
 
-      - name: install zsh-autosuggestions
-        command: git clone https://github.com/zsh-users/zsh-history-substring-search ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
+      - name: install zsh-history-substring-search
+        command: git clone https://github.com/zsh-users/zsh-history-substring-search.git ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
         when: not stat_sugg_result.results[1].stat.exists
 
-      - name: install zsh-autosuggestions
-        command: git clone https://github.com/zsh-users/zsh-completion ~/.oh-my-zsh/custom/plugins/zsh-completion
+      - name: install zsh-completion
+        command: git clone https://github.com/zsh-users/zsh-completion.git ~/.oh-my-zsh/custom/plugins/zsh-completion
         when: not stat_sugg_result.results[2].stat.exists
 
-      - name: install zsh-autosuggestions
+      - name: install zsh-syntax-highlighting
         command: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
         when: not stat_sugg_result.results[3].stat.exists
       tags: zsh-plugs
