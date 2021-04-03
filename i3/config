@@ -145,7 +145,7 @@ bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
 #exec_always compton -cCGfF -b -i 0.90 --vsync opengl
-exec_always --no-startup-id compton --config /home/mum/.config/i3/compton.conf
+exec_always --no-startup-id compton --config ~/.config/i3/compton.conf
 
 
 assign [class="Firefox"] $workspace2
@@ -189,7 +189,7 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 #bar {
-#        status_command i3status -c /home/mum/i3status.conf
+#        status_command i3status -c ~/i3status.conf
 #
 #colors {
 #		background $bg-color
@@ -218,33 +218,8 @@ colors {
 }
 
 
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/MacBuntu-Wallpapers/mbuntu-4.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/Wallpapers/ubuntu.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/zelda-wii-u-wallpaper-4.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/wafer.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/abstract1.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/man.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/cat.jpeg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/mkb.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/skull.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/triangle.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/drogon.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/naruto.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/itachi.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/originalchroma.png
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/superchroma.png
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/cyberpunk.jpg
-exec_always --no-startup-id feh --bg-scale ~/Pictures/tok.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/nameless.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/sekiro.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/sunset.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/ds.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/mirakai.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/ab2.png
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/mkb1.png
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/sanfra.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/factory.jpg
-#exec_always --no-startup-id feh --bg-scale /home/mum/Pictures/sunset.jpg
+#wallapaper
+exec_always --no-startup-id feh --bg-scale ~/Pictures/dystopia.jpg
 
 
 # Pulse Audio controls
@@ -277,13 +252,13 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
 # Gnome settings
-bindsym $mod+shift+g exec /home/mum/.config/i3/setting.sh
+bindsym $mod+shift+g exec ~/.config/i3/setting.sh
 
 # Screen setting
 
-#exec_always /home/mum/.screenlayout/screenlayout.sh
-exec_always /home/mum/.screenlayout/homesetup.sh
-bindsym $mod+shift+y exec /home/mum/.screenlayout/externaloff.sh
+#exec_always ~/.screenlayout/screenlayout.sh
+exec_always ~/.screenlayout/homesetup.sh
+bindsym $mod+shift+y exec ~/.screenlayout/externaloff.sh
 bindsym $mod+x move workspace to output right
 bindsym $mod+z move workspace to output left
 
@@ -291,8 +266,8 @@ bindsym $mod+z move workspace to output left
 exec_always "setxkbmap -option -layout us -variant ,qwerty"
 hide_edge_borders both
 #lock screen
-#bindsym $mod+Shift+x exec i3lock -i /home/mum/Pictures/james.png -p win -e -t
-bindsym $mod+Shift+x exec /home/mum/.config/i3/matrix.sh
+#bindsym $mod+Shift+x exec i3lock -i ~/Pictures/james.png -p win -e -t
+bindsym $mod+Shift+x exec ~/.config/i3/matrix.sh
 #inverted scroll
 #exec_always --no-startup-id synclient HorizEdgeScroll=1 VertEdgeScroll=1 VertScrollDelta=-113
 exec_always --no-startup-id xinput --set-prop "DELL07E6:00 06CB:76AF Touchpad" "libinput Natural Scrolling Enabled" 1

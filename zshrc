@@ -9,7 +9,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH="/home/mmujahid/.oh-my-zsh"
+  export ZSH="~/.oh-my-zsh"
 
 
 # setup export for node nvm
@@ -132,7 +132,7 @@ alias vdes='vagrant destroy'
 alias vrel='vagrant reload'
 alias vhal='vagrant halt'
 alias vst='vagrant status'
-alias wwp='cd /home/mmujahid/Downloads/projects'
+alias wwp='cd ~/Downloads/projects'
 alias ww='cd /sysops/infrastructure'
 alias wwt='cd /sysops/temp/infrastructure'
 alias gst="git status"
@@ -151,7 +151,7 @@ alias gollf='git log --name-only --pretty=oneline --full-index'
 alias cat='bat --paging never'
 alias rcat='cat'
 alias gf='git fetch'
-alias aws1='cd /home/mmujahid/aws'
+alias aws1='cd ~/aws'
 alias awsm='cd /cps/aws-accounts-master'
 alias cps='cd /cps'
 alias infra='cd /cps/infrastructure'
@@ -163,8 +163,8 @@ alias inv='vim /sysops/infrastructure/environment/production/inventory.yml'
 alias copy="xclip -sel clip"
 alias tv="terraform validate"
 alias tf="terraform fmt"
-alias wquit="sudo python /home/mmujahid/wqavim.py"
-alias tquit="sudo python /home/mmujahid/terms.py"
+alias wquit="sudo python ~/wqavim.py"
+alias tquit="sudo python ~/terms.py"
 alias docs="/cps/docs/content/docs"
 alias gs="git status"
 
@@ -219,6 +219,6 @@ complete -o nospace -C /usr/local/bin/terraform terraform
 
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
-export GOPATH=/home/mmujahid/go/packages
+export GOPATH=~/go/packages
 export PATH=$PATH:$GOPATH/bin
-export GOPATH=$GOPATH:/home/mmujahid/aws/go
+export GOPATH=$GOPATH:~/aws/go
