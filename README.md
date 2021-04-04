@@ -1,5 +1,8 @@
 # Dotfiles
 
+- This repo contains all the files necessary to set up a workstation.
+- The set up is mainly done by ansible and [DotBot](https://github.com/anishathalye/dotbot).
+- Run the make commands below to get started. :) 
 ## Installation
 
 - To set up our workstation we must first execute `sudo make setup`.
