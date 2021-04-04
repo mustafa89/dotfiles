@@ -87,6 +87,23 @@
         become: true
       tags: neovim
 
+    - block:
+      - name: Add an apt key by id from a keyserver for alacritty
+        apt_key:
+          keyserver: keyserver.ubuntu.com
+          id: 5B7FC40A404FAD98548806028AC9B4BBBAB4900B
+        become: true
+
+      - name: Add specified repository into sources list for alacritty
+        apt_repository:
+          repo:  "{{ item }}"
+          state: present
+        with_items:
+          - deb http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main 
+          - deb-src http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main 
+        become: true
+      tags: alacritty
+
     - name: Install packages
       become: yes
       apt:
@@ -277,12 +294,6 @@
       shell: chsh -s /bin/zsh
       become: yes
     
-    - name: Snap install alacritty because it is the easiest
-      shell: |
-        snap install alacritty --classic
-      become: yes
-      tags: alacritty
-
     - name: Restore terminal profiles
       shell: |
         dconf load /org/gnome/terminal/legacy/profiles:/:7fcf6e99-a228-4688-b1cc-982f03c07788/ < terminaltheme-dark-profile.dconf
