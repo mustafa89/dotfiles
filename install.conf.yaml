@@ -31,6 +31,6 @@
       path: zshrc
 
 - shell:
-    - ['git submodule update --init --recursive', 'Installing submodules... ']
+    - ['git submodule update --remote --recursive', 'Installing submodules... ']
     - ['fonts/install.sh', 'Install powerline fonts... ']
     - ['pip3 install pynvim', 'Install pynvim for neovim... ']
