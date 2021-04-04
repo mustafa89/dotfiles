@@ -1,5 +1,7 @@
 # Dotfiles
 
+## Installation
+
 - To set up our workstation we must first execute `sudo make setup`.
 This will install ansible and necessary packages to run the main ansible `playbook`.
 - Once done, we can then run `make init`. Provide your sudo password. 
@@ -45,5 +47,6 @@ And also a large number of vim plugins and third party packages. Thankyou for th
 
 - Currently this repo can only run with Ubuntu 18.04
 - The playbook will set everything up for the user who is running the playbook. Basically for the $(whoami) user.
+- [DotBot](https://github.com/anishathalye/dotbot) is used to connect the actual dotfiles.
 - Deoplete may require running `:UpdateRemotePlugins` the first time.
 - If `zsh` doesn't start, we have to manully `chsh -s $(which zsh)`  as well in some case.
