@@ -123,6 +123,7 @@
           - redshift-gtk
           - vim
           - neovim
+          - alacritty
           - docker
           - tig
           - i3lock
