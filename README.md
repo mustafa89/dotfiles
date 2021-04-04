@@ -1,12 +1,12 @@
 # Dotfiles
 
-1. To set up our workstation we must first execute `sudo make setup`
+1. To set up our workstation we must first execute `sudo make setup`.
 This will install ansible and necessary packages to run the main ansible `playbook`.
-2. Once done, we can then run `make init`
-Provide your sudo password. This is needed the for the first time.
+2. Once done, we can then run `make init`. Provide your sudo password. 
+> This is needed the for the first time.
 3. Now run `make run`
-This will actually run the main ansible `playbook.yml` that will setup the work station.
-> `make check` is can also be run to the ansible playbook in checkmode.
+This will run the main ansible `playbook.yml` that will setup the work station.
+> `make check` can also be run which will run the ansible playbook in checkmode.
 4. When the playbook has run to completion.
     - Reboot your system.
     - Log in (but this time click on the setting button next to the login button and select `i3`)
