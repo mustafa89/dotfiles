@@ -165,6 +165,7 @@
           - tree
           - traceroute
           - tcpdump
+          - pm-utils
           - net-tools
           - network-manager-openconnect
           - network-manager-openvpn
