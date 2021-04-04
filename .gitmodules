@@ -1,6 +1,3 @@
-[submodule "fonts"]
-	path = fonts
-	url = https://github.com/powerline/fonts.git
 [submodule "i3/bumblebeeStatus"]
 	path = i3/bumblebeeStatus
 	url = https://github.com/mustafa89/bumblebee-status.git
