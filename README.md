@@ -1,30 +1,32 @@
 # Dotfiles
 
-- To set up our workstation we must first execute
+1. To set up our workstation we must first execute
 
 ```bash
 sudo make setup
 ```
 
-- This will install ansible and necessary packages to run the main ansible `playbook`.
-- Once done, we can then run
+This will install ansible and necessary packages to run the main ansible `playbook`.
+
+2. Once done, we can then run
 
 ```bash
 make init
 ```
+Provide your sudo password. This is needed the for the first time.
 
-- Provide your sudo password. This is needed the for the first time.
-- Now run
+3. Now run
 
 ```bash
 make run
 ```
-- This will actually run the main ansible `playbook.yml` that will setup the work station.
-- `make check` is can also be run to the ansible playbook in checkmode.
-- When the playbook has run to completion.
-  - Reboot your system.
-  - Log in (but this time click on the setting button next to the login button and select `i3`)
-  - Open the terminal `Alt+Enter` and walaah!!
+This will actually run the main ansible `playbook.yml` that will setup the work station.
+`make check` is can also be run to the ansible playbook in checkmode.
+
+4. When the playbook has run to completion.
+    - Reboot your system.
+    - Log in (but this time click on the setting button next to the login button and select `i3`)
+    - Open the terminal `Alt+Enter` and walaah!!
 
 The workstation should look something like this when done.
 ![fig1](images/dotsmulti.png)

@@ -10,7 +10,7 @@ init:
 	ansible-playbook -i localhost playbook.yml --diff -t sudo -K
 
 .PHONY: check
-run:
+check:
 	ansible-playbook -i localhost playbook.yml --diff -C
 
 .PHONY: run
