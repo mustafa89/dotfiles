@@ -276,6 +276,12 @@
     - name: set default shell for user
       shell: chsh -s /bin/zsh
       become: yes
+    
+    - name: Snap install alacritty because it is the easiest
+      shell: |
+        snap install alacritty --classix
+      become: yes
+      tags: alacritty
 
     - name: Restore terminal profiles
       shell: |

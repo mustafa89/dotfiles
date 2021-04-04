@@ -13,6 +13,7 @@
     ~/.config/nvim/init.vim: nvim/init.vim
     ~/.config/gtk-3.0/settings.ini: gtksettings.ini
     ~/Pictures/dystopia.jpg: dystopis1.jpg
+    ~/.config/alacritty/alacritty.yml: alacritty.yml
     ~/.config/i3:
       force: true 
       path: i3
