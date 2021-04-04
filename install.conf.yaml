@@ -11,7 +11,7 @@
     ~/.vim: vim
     ~/.p10k.zsh: p10k.zsh
     ~/.config/nvim/init.vim: nvim/init.vim
-    ~/Pictures/dystopia.jpg: dystopis1.jpg
+    ~/Pictures/dystopia.jpg: images/dystopis1.jpg
     ~/.config/alacritty/alacritty.yml: alacritty.yml
     ~/.config/gtk-3.0/settings.ini:
       force: true
