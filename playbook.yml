@@ -308,7 +308,7 @@
       changed_when: vim_plugins_stdout.stdout_lines|length != 0
 
     - name: set default shell for user
-      shell: chsh -s /bin/zsh
+      shell: chsh -s $(which zsh)
       become: yes
 
     - name: Restore terminal profiles
