@@ -38,6 +38,7 @@
         line: "{{ users.username }} ALL=(ALL) NOPASSWD:ALL"
         regexp: "^{{ users.username }}\\s+"
       with_items: "{{ users }}"
+      tags: sudo
 
     - block:
       - name: Add an Apt signing key for the brave browser
@@ -241,7 +242,7 @@
         when: not stat_sugg_result.results[1].stat.exists
 
       - name: install zsh-completion
-        command: git clone https://github.com/zsh-users/zsh-completion.git ~/.oh-my-zsh/custom/plugins/zsh-completion
+        command: git clone https://github.com/zsh-users/zsh-completions.git ~/.oh-my-zsh/custom/plugins/zsh-completions
         when: not stat_sugg_result.results[2].stat.exists
 
       - name: install zsh-syntax-highlighting
