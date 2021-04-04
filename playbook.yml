@@ -279,7 +279,7 @@
     
     - name: Snap install alacritty because it is the easiest
       shell: |
-        snap install alacritty --classix
+        snap install alacritty --classic
       become: yes
       tags: alacritty
 
