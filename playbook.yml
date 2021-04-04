@@ -54,7 +54,21 @@
       tags: brave
 
     - block:
-      - name: Add an apt key by id from a keyserver for i3 gaps
+      - name: Add an Apt signing key for vscode
+        apt_key:
+          url: https://packages.microsoft.com/keys/microsoft.asc
+          state: present
+        become: true
+
+      - name: Add specified repository into sources list for vscode
+        apt_repository:
+          repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+          state: present
+        become: true
+      tags: vscode
+
+    - block:
+      - name: Add an apt key by id from the ubuntu keyserver for i3 gaps
         apt_key:
           keyserver: keyserver.ubuntu.com
           id: BDA0E4BA891B327BB00DF1E076458020C35556DC
@@ -71,7 +85,7 @@
       tags: gaps
 
     - block:
-      - name: Add an apt key by id from a keyserver for Neovim
+      - name: Add an apt key by id from the ubuntu keyserver for Neovim
         apt_key:
           keyserver: keyserver.ubuntu.com
           id: 9DBB0BE9366964F134855E2255F96FCF8231B6DD
@@ -88,7 +102,7 @@
       tags: neovim
 
     - block:
-      - name: Add an apt key by id from a keyserver for alacritty
+      - name: Add an apt key by id from the ubuntu keyserver for alacritty
         apt_key:
           keyserver: keyserver.ubuntu.com
           id: 5B7FC40A404FAD98548806028AC9B4BBBAB4900B
@@ -99,8 +113,8 @@
           repo:  "{{ item }}"
           state: present
         with_items:
-          - deb http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main 
-          - deb-src http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main 
+          - deb http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main
+          - deb-src http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main
         become: true
       tags: alacritty
 
@@ -115,12 +129,15 @@
           - feh
           - compton
           - apt-transport-https
+          - software-properties-common
           - gnupg
           - flameshot
           - brave-browser
           - pulseaudio
           - pulseaudio-utils
           - redshift-gtk
+          - code
+          - awscli
           - vim
           - neovim
           - alacritty
@@ -294,7 +311,7 @@
     - name: set default shell for user
       shell: chsh -s /bin/zsh
       become: yes
-    
+
     - name: Restore terminal profiles
       shell: |
         dconf load /org/gnome/terminal/legacy/profiles:/:7fcf6e99-a228-4688-b1cc-982f03c07788/ < terminaltheme-dark-profile.dconf
