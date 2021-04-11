@@ -96,7 +96,7 @@
 #scrolling:
 # Maximum number of lines in the scrollback buffer.
 # Specifying '0' will disable scrolling.
-#history: 10000
+history: 20000
 
 # Scrolling distance multiplier.
 #multiplier: 3
@@ -168,7 +168,7 @@ font:
   #
   # Thin strokes are suitable for retina displays, but for non-retina screens
   # it is recommended to set `use_thin_strokes` to `false`.
-  #use_thin_strokes: true
+  use_thin_strokes: true
 
 #FROM: https://github.com/alacritty/alacritty/wiki/Color-schemes
 
@@ -415,17 +415,17 @@ colors:
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
 background_opacity: 0.8
-#selection:
+selection:
 # This string contains all characters that are used as separators for
 # "semantic words" in Alacritty.
-#semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
+  semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
 
 # When set to `true`, selected text will be copied to the primary clipboard.
-#save_to_clipboard: false
+  save_to_clipboard: true
 
-#cursor:
+cursor:
 # Cursor style
-#style:
+  style: Beam
 # Cursor shape
 #
 # Values for `shape`:

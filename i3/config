@@ -49,10 +49,10 @@ bindsym $mod+Shift+s exec rofi -show ssh
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+#bindsym $mod+j focus left
+#bindsym $mod+k focus down
+#bindsym $mod+l focus up
+#bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -280,6 +280,9 @@ bindsym $mod+Shift+o exec --no-startup-id brave-browser
 #firefox
 bindsym $mod+Shift+f exec --no-startup-id firefox
 
+#slack
+bindsym $mod+l exec --no-startup-id slack
+
 #filezile
 bindsym $mod+Shift+i exec --no-startup-id filezilla
 
@@ -290,8 +293,8 @@ bindsym $mod+Shift+b exec --no-startup-id "nmcli con down id Pulse\ Secure\ VPN\
 
 #autostart
 #exec --no-startup-id firefox
-exec --no-startup-id google-chrome
-exec --no-startup-id nm-applet
+#exec --no-startup-id google-chrome
+exec_always --no-startup-id nm-applet
 
 #screen off disable
 exec --no-startup-id xset s off
@@ -317,5 +320,5 @@ client.focused_inactive $inactive-bg-color $inactive-bg-color $inactive-text-col
 client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #00ff00
 
 #keyboard speed increase
-exec_always --no-startup-id "xset r rate 250 55"
+exec_always --no-startup-id "xset r rate 250 100"
 

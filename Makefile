@@ -7,15 +7,20 @@ setup:
 
 .PHONY: init
 init:
-	ansible-playbook -i localhost playbook.yml --diff -t sudo -K
+	ansible-playbook playbook.yml --diff --tags sudo -K
 
 .PHONY: check
 check:
-	ansible-playbook -i localhost playbook.yml --diff -C
+	ansible-playbook playbook.yml --diff --check
 
 .PHONY: run
 run:
-	ansible-playbook -i localhost playbook.yml --diff 
+	ansible-playbook playbook.yml --diff
 
+.PHONY: tag
+tag:
+	ansible-playbook playbook.yml --diff --tags $(tags)
 
-
+.PHONY: update
+update:
+	ansible-playbook playbook.yml --diff --tags update-system

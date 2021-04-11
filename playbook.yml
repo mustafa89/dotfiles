@@ -7,26 +7,28 @@
     ansible_python_interpreter: /usr/bin/python3
 
   tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: true
-      become: true
-      changed_when: false
+    - block:
+      - name: Update apt cache
+        apt:
+          update_cache: true
+        become: true
+        changed_when: false
 
-    - name: Upgrade system
-      apt:
-        upgrade: dist
-      become: true
+      - name: Upgrade system
+        apt:
+          upgrade: dist
+        become: true
 
-    - name: Remove unused packages
-      apt:
-        autoremove: true
-      become: true
+      - name: Remove unused packages
+        apt:
+          autoremove: true
+        become: true
 
-    - name: Clean apt cache
-      apt:
-        autoclean: true
-      become: true
+      - name: Clean apt cache
+        apt:
+          autoclean: true
+        become: true
+      tags: update-system
 
     - name: configure sudoers
       become: true
@@ -126,6 +128,7 @@
         packages:
           - feh
           - compton
+          - hexchat
           - apt-transport-https
           - software-properties-common
           - gnupg
@@ -174,6 +177,12 @@
           - cmatrix
           - x11-xserver-utils
           - arandr
+          - neofetch
+          - meld
+          - gtk-recordmydesktop
+          - openjdk-8-jre
+          - openjfx
+      tags: packages
 
     - name: install dotbot
       shell: pip3 install dotbot
@@ -182,6 +191,12 @@
       apt:
         deb: https://github.com/sharkdp/bat/releases/download/v0.18.0/bat-musl_0.18.0_amd64.deb
       become: yes
+
+    - name: Install slack desktop
+      apt:
+        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.14.0-amd64.deb
+      become: yes
+      tags: slack
 
     - block:
       - name: Check if .oh-my-zsh exists
@@ -265,6 +280,14 @@
         when: not stat_nvm_result.stat.exists
       tags: nvm
 
+    - name: Download docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.0/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: '755'
+      become: yes
+      tags: compose
+
     - name: run dotbot
       command: ~/.local/bin/dotbot -c install.conf.yaml
 
@@ -303,11 +326,12 @@
 
     - name: install vim plugins
       shell: |
-       /usr/bin/vim -f -E -s -c "source ~/.vimrc" +PlugInstall +qall && 
+       /usr/bin/vim -f -E -s -c "source ~/.vimrc" +PlugInstall +qall
        /usr/bin/nvim --headless +UpdateRemotePlugins +qall &> /dev/null
       register: vim_plugins_stdout
       check_mode: false
       changed_when: vim_plugins_stdout.stdout_lines|length != 0
+      tags: vim-update
 
     - name: set default shell for user
       shell: chsh -s $(which zsh)

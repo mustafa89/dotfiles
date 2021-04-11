@@ -36,8 +36,9 @@ let g:enable_bold_font = 1
 let g:gruvbox_contrast_dark = 'hard'
 let g:deoplete#enable_at_startup = 1
 syntax enable
-"colorscheme hybrid_reverse
-colorscheme gruvbox
+"colorscheme molokai
+colorscheme hybrid_reverse
+"colorscheme gruvbox
 set background=dark
 hi Normal guibg=black ctermbg=NONE
 map <C-n> :NERDTreeToggle<CR>

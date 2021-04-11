@@ -53,10 +53,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -90,6 +90,8 @@ zsh-syntax-highlighting
 history-substring-search
 zsh-completions
 colored-man-pages
+docker
+docker-compose
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -162,6 +164,7 @@ alias tf="terraform fmt"
 alias wquit="sudo python ~/wqavim.py"
 alias tquit="sudo python ~/terms.py"
 alias docs="/cps/docs/content/docs"
+alias dots="cd ~/dots-repo/dotfiles"
 alias gs="git status"
 
 # node() {
