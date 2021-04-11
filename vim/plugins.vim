@@ -18,10 +18,15 @@ Plug 'nvie/vim-flake8'
 Plug 'hashivim/vim-terraform'
 Plug 'vim-syntastic/syntastic'
 Plug 'juliosueiras/vim-terraform-completion'
-Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'gabrielelana/vim-markdown'
 Plug 'cespare/vim-toml'
 Plug 'martinda/Jenkinsfile-vim-syntax'
+Plug 'morhetz/gruvbox'
+Plug 'crusoexia/vim-monokai',
+Plug 'nanotech/jellybeans.vim',
+Plug 'sjl/badwolf',
+"Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 call plug#end()

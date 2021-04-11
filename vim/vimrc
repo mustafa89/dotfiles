@@ -17,7 +17,6 @@ set showmatch
 set smartindent
 set autoindent
 set nofoldenable
-set t_Co=256
 set foldmethod=indent
 set clipboard=unnamed
 set completeopt=menuone,longest
@@ -30,26 +29,48 @@ set termguicolors
 set linespace=3
 set guifont=Fira\ Code:h12
 set cursorline
+syntax enable
 "set cursorcolumn
+
+"====SETTING FOR GRUVBOX====="
 let g:enable_italic_font = 1
 let g:enable_bold_font = 1
 let g:gruvbox_contrast_dark = 'hard'
-let g:deoplete#enable_at_startup = 1
-syntax enable
+let g:gruvbox_termcolors=16
+"============================"
+
 "colorscheme molokai
-colorscheme hybrid_reverse
+"colorscheme alduin
+"colorscheme jellybeans
+colorscheme badwolf
+"colorscheme hybrid_reverse
+"colorscheme solarflare
 "colorscheme gruvbox
+"colorscheme heroku-contrast
 set background=dark
+
+let g:badwolf_darkgutter = 1
+let g:badwolf_tabline = 1
+
+
+"======SETTING FOR JELLYBEANS COLORSCHEME===="
+let g:jellybeans_use_lowcolor_black = 0
+let g:jellybeans_use_term_italics = 1
+"======================================="
+
 hi Normal guibg=black ctermbg=NONE
 map <C-n> :NERDTreeToggle<CR>
 let g:molokai_original = 1
 set lazyredraw
 set synmaxcol=180
 set ttyfast
-set termguicolors
+
+"=====KEY BINDINGS======="
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
+"========================"
+
 if has("autocmd")
   filetype plugin indent on
 endif
@@ -58,7 +79,7 @@ autocmd FileType * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd FileType * match Error /\s\+$/
 
 
-" Syntastic Config
+"=====SYNTASTIC CONFIG===="
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -67,10 +88,8 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
-
 " (Optional)Remove Info(Preview) window
 set completeopt-=preview
-
 " (Optional)Hide Info(Preview) window after completions
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
@@ -83,26 +102,21 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 "
 "" (Optional) Default: 1, enable(1)/disable(0) terraform module registry completion
 "let g:terraform_registry_module_completion = 1
-
+"========================"
 
 set runtimepath+=~/.vim/plugged/deoplete.nvim
-let g:deoplete#enable_at_startup = 1
 
 filetype plugin indent on
-syntax enable
-
 "----------------------------------------------------------
 " Neovim's Python provider
 "----------------------------------------------------------
 "let g:python_host_prog  = '/usr/bin/python'
 let g:python_host_prog = '/usr/bin/python3'
-
-
+let g:deoplete#enable_at_startup = 1
 let g:deoplete#omni_patterns = {}
-
 "call deoplete#custom#option('omni_patterns', {
 "\ 'complete_method': 'omnifunc',
 "\ 'terraform': '[^ *\t"{=$]\w*',
 "\})
-
 call deoplete#initialize()
+

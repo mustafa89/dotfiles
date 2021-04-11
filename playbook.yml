@@ -325,9 +325,7 @@
       become: yes
 
     - name: install vim plugins
-      shell: |
-       /usr/bin/vim -f -E -s -c "source ~/.vimrc" +PlugInstall +qall
-       /usr/bin/nvim --headless +UpdateRemotePlugins +qall &> /dev/null
+      command: /usr/bin/nvim --headless +PlugInstall +qall
       register: vim_plugins_stdout
       check_mode: false
       changed_when: vim_plugins_stdout.stdout_lines|length != 0
