@@ -166,42 +166,48 @@ alias tquit="sudo python ~/terms.py"
 alias docs="/cps/docs/content/docs"
 alias dots="cd ~/dots-repo/dotfiles"
 alias gs="git status"
+alias gcpa="git cherry-pick --abort"
+alias p0="git checkout origin/c3p0"
+alias p2="git checkout origin/c3p2"
+alias p4="git checkout origin/c3p4"
+alias p6="git checkout origin/c3p6"
+alias rc="git checkout origin/rc"
+alias master="git checkout origin/master"
 
-# node() {
-#   id=$(docker run --rm -d -t -p 5000:5000 -v ${PWD}:/usr/src/app -w /usr/src/app node:alpine)
-#  docker exec -it $id $@
-#docker container rm -f $id
-#}
-tss() {
-  terraform state show -no-color $@
-}
-ta() {
-  terraform apply $@
-}
-tp() {
-  terraform plan $@
-}
+
 gfpo() {
   git push -f origin $(git status | head -1 | cut -d ' ' -f3)
 }
+
 sai() {
 sudo apt install $@
 }
+
 lc() {
 colorls --gs -tA --dark $@
 }
+
+ghub() {
+git config --local user.name "mustafa89"
+git config --local user.email "mustafa.mujahid@outlook.com"
+}
+
+gitcp() {
+  git cherry-pick $@
+}
+
 terrainit() {
 echo 'provider "aws" {\n  profile = var.aws_profile\n  region = var.aws_region\n}' > main.tf
 echo 'aws_profile = ""\naws_region = "eu-central-1"' > terraform.tfvars
 cat > variables.tf <<EOF
 variable "aws_profile" {
   type        = string
-  description = "profile for the staging account"
+  description = "AWS profile"
 }
 
 variable "aws_region" {
   type        = string
-  description = "default region for the aws staging account"
+  description = "AWS region"
   }
 EOF
 }
