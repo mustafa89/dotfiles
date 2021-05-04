@@ -182,6 +182,9 @@
           - gtk-recordmydesktop
           - openjdk-8-jre
           - openjfx
+          - virtualbox
+          - jq
+          - pv
       tags: packages
 
     - name: install dotbot
