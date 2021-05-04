@@ -1,6 +1,6 @@
 
 [core]
-	editor = vim
+	editor = nvim
 [user]
 	name = Mustafa Mujahid
 	email = mustafa.mujahid@tradebyte.com
