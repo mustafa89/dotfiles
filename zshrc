@@ -92,6 +92,7 @@ zsh-completions
 colored-man-pages
 docker
 docker-compose
+kubectl
 )
 
 source $ZSH/oh-my-zsh.sh
