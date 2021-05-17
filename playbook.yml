@@ -5,6 +5,7 @@
   become: false
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    go_version: "1.16.4"
 
   tasks:
     - block:
@@ -200,6 +201,32 @@
         deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.14.0-amd64.deb
       become: yes
       tags: slack
+
+    - block:
+      - name: Check if Golang is installed
+        stat:
+          path: /usr/local/go
+        register: golang
+
+      - name: Download Golang
+        get_url:
+          url: "https://golang.org/dl/go{{ go_version }}.linux-amd64.tar.gz"
+          dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+          mode: '0644'
+        when: not golang.stat.exists
+        become: yes
+
+      - name: Install Golang
+        command: "tar -C /usr/local -xzf /tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        when: not golang.stat.exists
+        become: yes
+
+      - name: Add Golang to the PATH
+        shell: export PATH=$PATH:/usr/local/go/bin
+        when: not golang.stat.exists
+        become: yes
+      tags: go
+
 
     - block:
       - name: Check if .oh-my-zsh exists
