@@ -124,6 +124,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias vim='nvim'
+alias vi='nvim'
 alias live='export DEPLOYMENT=vagrant/deployment/live.yml'
 alias vssh='vagrant ssh'
 alias vup='vagrant up'
