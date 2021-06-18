@@ -17,11 +17,11 @@
       force: true
       path: gtksettings.ini
     ~/.config/i3:
-      force: true 
+      force: true
       path: i3
     ~/.screenlayout: screenlayout
     ~/.vimrc:
-      force: true 
+      force: true
       path: vim/vimrc
     ~/.bashrc:
       force: true
@@ -34,3 +34,4 @@
     - ['git submodule update --init --recursive', 'Installing submodules... ']
     - ['fonts/install.sh', 'Install powerline fonts... ']
     - ['pip3 install pynvim', 'Install pynvim for neovim... ']
+

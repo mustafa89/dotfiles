@@ -93,6 +93,7 @@ colored-man-pages
 docker
 docker-compose
 kubectl
+helm
 )
 
 source $ZSH/oh-my-zsh.sh
