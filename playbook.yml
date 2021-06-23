@@ -150,6 +150,7 @@
           - gnupg
           - flameshot
           - brave-browser
+          - packer
           - pulseaudio
           - pulseaudio-utils
           - redshift-gtk
