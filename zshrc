@@ -53,7 +53,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="false"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
@@ -213,6 +213,31 @@ variable "aws_region" {
   description = "AWS region"
   }
 EOF
+cat > terragrunt.hcl <<EOF
+include {
+  path = find_in_parent_folders()
+}
+terraform {
+  before_hook "before_hook" {
+    commands     = ["init"]
+    execute      = ["bash", "../../global/init.sh"]
+  }
+  extra_arguments "init_args" {
+    commands = [
+      "init"
+    ]
+
+    arguments = [
+     "-plugin-dir=../../global/.terraform/providers/",
+    ]
+  }
+}
+EOF
+cat > terraform.tf <<EOF
+terraform {
+  backend "s3" {}
+}
+EOF
 }
 function wttr(){ curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Ansbach}"}
 alias my='mycli --login-path'
@@ -233,3 +258,5 @@ export GOPATH=$GOPATH:~/aws/go
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
+# To customize prompt, run `p10k configure` or edit ~/dots-repo/dotfiles/p10k.zsh.
+[[ ! -f ~/dots-repo/dotfiles/p10k.zsh ]] || source ~/dots-repo/dotfiles/p10k.zsh

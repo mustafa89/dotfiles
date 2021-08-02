@@ -143,6 +143,7 @@
         packages:
           - feh
           - helm
+          - composer
           - compton
           - hexchat
           - apt-transport-https
@@ -155,11 +156,13 @@
           - pulseaudio-utils
           - redshift-gtk
           - code
-          - awscli
           - vim
           - neovim
           - alacritty
           - docker
+          - dnsutils
+          - vlc
+          - postgresql-client
           - tig
           - i3lock
           - i3-gaps
