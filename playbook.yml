@@ -69,6 +69,20 @@
       tags: vscode
 
     - block:
+      - name: Add an Apt signing key for packer
+        apt_key:
+          url: https://apt.releases.hashicorp.com/gpg
+          state: present
+        become: true
+
+      - name: Add specified repository into sources list for packer
+        apt_repository:
+          repo: deb [arch=amd64] https://apt.releases.hashicorp.com bionic main
+          state: present
+        become: true
+      tags: packer
+
+    - block:
       - name: Add an Apt signing key for helm
         apt_key:
           url: https://baltocdn.com/helm/signing.asc
@@ -142,6 +156,7 @@
       vars:
         packages:
           - feh
+          - packer
           - helm
           - composer
           - compton
@@ -151,7 +166,6 @@
           - gnupg
           - flameshot
           - brave-browser
-          - packer
           - pulseaudio
           - pulseaudio-utils
           - redshift-gtk

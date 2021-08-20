@@ -260,6 +260,7 @@ bindsym $mod+shift+g exec ~/.config/i3/setting.sh
 #exec_always ~/.screenlayout/screenlayout.sh
 exec_always ~/.screenlayout/homesetup.sh
 bindsym $mod+shift+y exec ~/.screenlayout/externaloff.sh
+bindsym $mod+shift+p exec ~/.screenlayout/screenlayout.sh
 bindsym $mod+x move workspace to output right
 bindsym $mod+z move workspace to output left
 
