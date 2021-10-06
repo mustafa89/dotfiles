@@ -94,6 +94,7 @@ docker
 docker-compose
 kubectl
 helm
+fzf
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -182,6 +183,14 @@ gfpo() {
   git push -f origin $(git status | head -1 | cut -d ' ' -f3)
 }
 
+ta() {
+  terragrunt apply $@
+}
+
+ti() {
+  terragrunt init $@
+}
+
 sai() {
 sudo apt install $@
 }
@@ -260,3 +269,5 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 
 # To customize prompt, run `p10k configure` or edit ~/dots-repo/dotfiles/p10k.zsh.
 [[ ! -f ~/dots-repo/dotfiles/p10k.zsh ]] || source ~/dots-repo/dotfiles/p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
