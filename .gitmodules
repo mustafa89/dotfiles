@@ -6,3 +6,9 @@
 	path = fonts
 	url = https://github.com/mustafa89/fonts.git
 	branch = master
+[submodule "roles/ansible-firefox"]
+	path = roles/ansible-firefox
+	url = https://github.com/basvandenbrink/ansible-firefox.git
+[submodule "roles/ansible-role-docker"]
+	path = roles/ansible-role-docker
+	url = https://github.com/geerlingguy/ansible-role-docker.git
