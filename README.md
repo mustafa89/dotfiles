@@ -51,7 +51,7 @@ And also a large number of vim plugins and third party packages. Thankyou for th
 
 ## Considerations
 
-- Currently this repo can only run with Ubuntu 18.04
+- Currently this repo is fully compatible with Ubuntu 18.04 and 20.04.
 - The playbook will set everything up for the user who is running the playbook. Basically for the $(whoami) user.
 - [DotBot](https://github.com/anishathalye/dotbot) is used to connect the actual dotfiles.
 - Deoplete may require running `:UpdateRemotePlugins` the first time.
