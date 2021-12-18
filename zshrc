@@ -127,7 +127,6 @@ source $ZSH/oh-my-zsh.sh
 
 alias vim='nvim'
 alias vi='nvim'
-alias live='export DEPLOYMENT=vagrant/deployment/live.yml'
 alias vssh='vagrant ssh'
 alias vup='vagrant up'
 alias vdes='vagrant destroy'
@@ -154,42 +153,33 @@ alias cat='bat --paging never'
 alias rcat='cat'
 alias gf='git fetch'
 alias aws1='cd ~/aws'
-alias awsm='cd /cps/aws-accounts-master'
-alias cps='cd /cps'
-alias infra='cd /cps/infrastructure'
-alias stag='cd /cps/infrastructure/staging-account'
-alias prod='cd /cps/infrastructure/production-account'
-alias tbone='cd /cps/tbone'
-alias tbone2='cd /cps/tbone-2'
-alias inv='vim /sysops/infrastructure/environment/production/inventory.yml'
+alias main='cd /code'
 alias copy="xclip -sel clip"
-alias tv="terraform validate"
-alias tf="terraform fmt"
 alias wquit="sudo python ~/wqavim.py"
 alias tquit="sudo python ~/terms.py"
-alias docs="/cps/docs/content/docs"
 alias dots="cd ~/dots-repo/dotfiles"
 alias gs="git status"
 alias gcpa="git cherry-pick --abort"
-alias p0="git checkout origin/c3p0"
-alias p2="git checkout origin/c3p2"
-alias p4="git checkout origin/c3p4"
-alias p6="git checkout origin/c3p6"
-alias rc="git checkout origin/rc"
 alias master="git checkout origin/master"
+alias tf='/code/infrastructure/scripts/terraform.sh'
+alias tg='/code/infrastructure/scripts/terragrunt.sh'
+alias infra='/code/infrastructure'
+alias k8s='/code/k8s-infrastructure'
+alias vpn='/opt/Perimeter81/perimeter81'
+
+sso() {
+ source /code/infrastructure/scripts/aws_profile_sso "$@"
+}
 
 
 gfpo() {
   git push -f origin $(git status | head -1 | cut -d ' ' -f3)
 }
 
-ta() {
-  terragrunt apply $@
+gpo() {
+  git push origin $(git status | head -1 | cut -d ' ' -f3)
 }
 
-ti() {
-  terragrunt init $@
-}
 
 sai() {
 sudo apt install $@

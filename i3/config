@@ -206,7 +206,7 @@ bar {
 	font pango:Inconsolata 10
 	position bottom
 	tray_output primary
-	status_command ~/.config/i3/bumblebeeStatus/bumblebee-status -m disk:root memory cpu pasink layout brightness date time battery -p nic.states=^down root.format="{left},({percent:05.02f}%)" root.path=/ time.format="%-I:%M CW %V" date.format="%a, %b %d" nic.exclude=lxc,lo,virbr,docker,vboxnet,veth, nic.format="{ip} {ssid}" memory.format="({percent:05.02f}%)" -t solarized-dark-awesome
+	status_command ~/.config/i3/bumblebeeStatus/bumblebee-status -m publicip pomodoro bluetooth redshift disk:root memory cpu pasink layout brightness date time battery -p nic.states=^down root.format="{left},({percent:05.02f}%)" root.path=/ time.format="%-I:%M CW %V" date.format="%a, %b %d" nic.exclude=lxc,lo,virbr,docker,vboxnet,veth, nic.format="{ip} {ssid}" memory.format="({percent:05.02f}%)" -t gruvbox-powerline
 
 colors {
       background $bg-color
