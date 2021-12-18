@@ -260,4 +260,7 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 # To customize prompt, run `p10k configure` or edit ~/dots-repo/dotfiles/p10k.zsh.
 [[ ! -f ~/dots-repo/dotfiles/p10k.zsh ]] || source ~/dots-repo/dotfiles/p10k.zsh
 
+
+export PATH=$PATH:/code/devel-tools/aws-sso/bin
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

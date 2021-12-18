@@ -97,6 +97,21 @@
       tags: helm
 
     - block:
+      - name: Add an Apt signing key for kubectl
+        apt_key:
+          url:  https://packages.cloud.google.com/apt/doc/apt-key.gpg
+          keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+          state: present
+        become: true
+
+      - name: Add specified repository into sources list for helm
+        apt_repository:
+          repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+          state: present
+        become: true
+      tags: kubectl
+
+    - block:
       - name: Add an apt key by id from the ubuntu keyserver for i3 gaps
         apt_key:
           keyserver: keyserver.ubuntu.com
@@ -174,6 +189,8 @@
           - neovim
           - alacritty
           - docker
+          - kubectl
+          - kubectx
           - dnsutils
           - vlc
           - postgresql-client
@@ -233,6 +250,32 @@
         deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.14.0-amd64.deb
       become: yes
       tags: slack
+
+    - block:
+      - name: Check if awscli is installed
+        stat:
+          path: /usr/local/bin/aws
+        register: aws
+
+      - block:
+        - name: Download the awscli bundle.
+          get_url:
+            url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+            dest: /tmp/awscli-bundle.zip
+
+        - name: Unarchive the installer.
+          unarchive:
+            src: /tmp/awscli-bundle.zip
+            dest: /tmp
+            copy: no
+            creates: /tmp/aws
+
+        - name: Install awscli package.
+          shell: bash /tmp/aws/install
+          become: yes
+        when: not aws.stat.exists
+
+      tags: awscli
 
     - block:
       - name: Check if Golang is installed
@@ -297,6 +340,66 @@
       tags: pk10
 
     - block:
+      - name: Check if .fzf exists
+        stat:
+          path: ~/.fzf
+        register: stat_fzf_result
+
+      - name: Get fzf
+        command: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        when: not stat_fzf_result.stat.exists
+
+      - name: Execute the fzf installer
+        shell: ~/.fzf/install
+        when: not stat_fzf_result.stat.exists
+      tags: fzf
+
+    - block:
+      - name: Check if kubens/kubectx exists
+        stat:
+          path: /usr/local/bin/kubectx
+        register: stat_result
+
+      - name: install kubens/kubectx
+        get_url:
+          url: https://github.com/ahmetb/kubectx
+          dest: /opt/kubectx
+          mode: '755'
+          force: no
+        when: not stat_result.stat.exists
+        become: yes
+
+      - name: create kubectx simlink
+        file:
+          src: "/opt/kubectx/{{ item }}"
+          dest: "/usr/local/bin/{{ item }}"
+          state: link
+        with_items:
+          - kubens
+          - kubectx
+        become: yes
+        when: not stat_result.stat.exists
+
+      - name: create completions directory
+        file:
+          path: ~/.oh-my-zsh/completions
+          state: directory
+          recurse: yes
+        when: not stat_result.stat.exists
+
+      - name: create kubens completions simlink
+        file:
+          src: "/opt/kubectx/completion/{{ item }}"
+          dest: "~/.oh-my-zsh/completions/{{ item }}"
+          state: link
+        with_items:
+          - _kubens.zsh
+          - _kubectx.zsh
+        when: not stat_result.stat.exists
+
+      tags: kubens
+
+    - block:
       - name: Check if zsh-suggestions exists
         stat:
           path: "{{ item }}"
@@ -342,16 +445,12 @@
         when: not stat_nvm_result.stat.exists
       tags: nvm
 
-    - name: Download docker-compose
-      get_url:
-        url: https://github.com/docker/compose/releases/download/1.29.0/docker-compose-Linux-x86_64
-        dest: /usr/local/bin/docker-compose
-        mode: '755'
-      become: yes
-      tags: compose
-
     - name: run dotbot
       command: ~/.local/bin/dotbot -c install.conf.yaml
+
+    - name: Install psutil for bumblebee status line
+      command: pip install psutil
+      tags: psutil
 
     - name: Need the light binary to control screen brightness
       copy:
@@ -402,3 +501,77 @@
         dconf load /org/gnome/terminal/legacy/profiles:/:7fcf6e99-a228-4688-b1cc-982f03c07788/ < terminaltheme-dark-profile.dconf
         dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < terminaltheme-profile.dconf
       tags: dconf
+
+    - block:
+      - name: install docker
+        include_role:
+          name: ansible-role-docker
+        vars:
+          docker_edition: 'ce'
+          docker_package: "docker-{{ docker_edition }}"
+          docker_package_state: latest
+          docker_service_state: started
+          docker_service_enabled: true
+          docker_restart_handler_state: restarted
+          docker_users:
+            - "{{ ansible_user_id }}"
+          docker_daemon_options:
+            storage-driver: "devicemapper"
+            log-opts:
+              max-size: "100m"
+          docker_install_compose: true
+          docker_compose_version: "1.29.0"
+          docker_compose_path: /usr/local/bin/docker-compose
+      become: yes
+      tags: docker
+
+    - block:
+      - name: Configure Firefox for nebula brain level productivity :D
+        include_role:
+          name: ansible-firefox
+        vars:
+          firefox_profiles:
+            default:
+              extensions:
+               - adblock-plus
+               - wappalyzer
+               - ublock-origin
+               - tree-style-tab
+               - i-dont-care-about-cookies
+               - to-google-translate
+               - translate-web-pages
+              preferences:
+                privacy.donottrackheader.enabled: true
+                privacy.trackingprotection.enabled: true
+                signon.rememberSignons: false
+                datareporting.healthreport.uploadEnabled: false
+                browser.aboutConfig.showWarning: false
+                app.shield.optoutstudies.enabled: false
+                toolkit.legacyUserProfileCustomizations.stylesheets: true
+        register: create_profile
+      - debug:
+          var: create_profile
+
+      - name: firefox - create chrome directory
+        file:
+          path: "{{ create_profile.profile_path }}/chrome/"
+          state: directory
+          mode: '0755'
+
+      - name: firefox - configure firefox custom css
+        copy:
+          dest: "{{ create_profile.profile_path }}/chrome/userChrome.css"
+          content: |
+            #TabsToolbar {
+              visibility: collapse !important;
+            }
+            #titlebar {
+              visibility: collapse !important;
+            }
+            #sidebar-header {
+              visibility: collapse !important;
+            }
+            #sidebar {
+              width: 400px !important;
+            }
+      tags: firefox
