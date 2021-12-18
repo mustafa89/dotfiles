@@ -549,8 +549,6 @@
                 app.shield.optoutstudies.enabled: false
                 toolkit.legacyUserProfileCustomizations.stylesheets: true
         register: create_profile
-      - debug:
-          var: create_profile
 
       - name: firefox - create chrome directory
         file:
