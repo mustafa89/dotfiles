@@ -189,8 +189,6 @@
           - neovim
           - alacritty
           - docker
-          - kubectl
-          - kubectx
           - dnsutils
           - vlc
           - postgresql-client
@@ -198,6 +196,7 @@
           - i3lock
           - i3-gaps
           - zsh
+          - kubectl
           - zsh-syntax-highlighting
           - zsh-antigen
           - gem
@@ -355,18 +354,13 @@
       tags: fzf
 
     - block:
-      - name: Check if kubens/kubectx exists
-        stat:
-          path: /usr/local/bin/kubectx
-        register: stat_result
-
       - name: install kubens/kubectx
-        get_url:
-          url: https://github.com/ahmetb/kubectx
-          dest: /opt/kubectx
-          mode: '755'
-          force: no
-        when: not stat_result.stat.exists
+        git:
+          repo: 'https://github.com/ahmetb/kubectx.git'
+          dest: '/opt/kubectx'
+          update: yes
+          force: yes
+          clone: yes
         become: yes
 
       - name: create kubectx simlink
@@ -374,28 +368,27 @@
           src: "/opt/kubectx/{{ item }}"
           dest: "/usr/local/bin/{{ item }}"
           state: link
+          force: yes
         with_items:
           - kubens
           - kubectx
         become: yes
-        when: not stat_result.stat.exists
 
       - name: create completions directory
         file:
           path: ~/.oh-my-zsh/completions
           state: directory
           recurse: yes
-        when: not stat_result.stat.exists
 
       - name: create kubens completions simlink
         file:
           src: "/opt/kubectx/completion/{{ item }}"
           dest: "~/.oh-my-zsh/completions/{{ item }}"
           state: link
+          force: yes
         with_items:
           - _kubens.zsh
           - _kubectx.zsh
-        when: not stat_result.stat.exists
 
       tags: kubens
 
@@ -493,7 +486,7 @@
       tags: vim-update
 
     - name: set default shell for user
-      shell: chsh -s $(which zsh)
+      shell: "usermod -s $(which zsh) {{ ansible_user_id }}"
       become: yes
 
     - name: Restore terminal profiles
@@ -548,6 +541,7 @@
                 browser.aboutConfig.showWarning: false
                 app.shield.optoutstudies.enabled: false
                 toolkit.legacyUserProfileCustomizations.stylesheets: true
+                browser.fullscreen.autohide: false
         register: create_profile
 
       - name: firefox - create chrome directory
