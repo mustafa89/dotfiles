@@ -221,6 +221,7 @@
           - network-manager-openconnect
           - network-manager-openvpn
           - network-manager
+          - htop
           - npm
           - manpages
           - blueman
@@ -440,6 +441,7 @@
 
     - name: run dotbot
       command: ~/.local/bin/dotbot -c install.conf.yaml
+      tags: dots
 
     - name: Install psutil for bumblebee status line
       command: pip install psutil

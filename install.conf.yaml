@@ -34,4 +34,5 @@
     - ['git submodule update --init --recursive', 'Installing submodules... ']
     - ['fonts/install.sh', 'Install powerline fonts... ']
     - ['pip3 install pynvim', 'Install pynvim for neovim... ']
+    - ['sudo npm i -g gitmoji-cli', 'Install  gitmoji-cli... ']
 
