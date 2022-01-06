@@ -13,6 +13,7 @@
     ~/.config/nvim/init.vim: nvim/init.vim
     ~/Pictures/dystopia.jpg: images/dystopis1.jpg
     ~/.config/alacritty/alacritty.yml: alacritty.yml
+    ~/.config/alacritty/schemes.yml: schemes.yml
     ~/.config/gtk-3.0/settings.ini:
       force: true
       path: gtksettings.ini
@@ -35,4 +36,5 @@
     - ['fonts/install.sh', 'Install powerline fonts... ']
     - ['pip3 install pynvim', 'Install pynvim for neovim... ']
     - ['sudo npm i -g gitmoji-cli', 'Install  gitmoji-cli... ']
+    - ['sudo npm i -g git-checkout-interactive', 'Install  gci... ']
 
