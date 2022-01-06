@@ -25,4 +25,7 @@ Plug 'cespare/vim-toml'
 Plug 'morhetz/gruvbox'
 Plug 'crusoexia/vim-monokai',
 Plug 'sjl/badwolf',
+Plug 'pangloss/vim-javascript',
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'maxmellon/vim-jsx-pretty'
 call plug#end()
