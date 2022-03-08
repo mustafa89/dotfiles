@@ -161,16 +161,14 @@ alias dots="cd ~/Desktop/dotfiles"
 alias gs="git status"
 alias gcpa="git cherry-pick --abort"
 alias master="git checkout origin/master"
-alias tf='/code/infrastructure/scripts/terraform.sh'
-alias tg='/code/infrastructure/scripts/terragrunt.sh'
-alias infra='/code/infrastructure'
-alias k8s='/code/k8s-infrastructure'
-alias vpn='/opt/Perimeter81/perimeter81'
+alias ctx="kubectx"
+alias ens="kubens"
 
-sso() {
- source /code/infrastructure/scripts/aws_profile_sso "$@"
+
+rbac-lookup() {
+kubectl get rolebindings,clusterrolebindings --all-namespaces \
+  -o custom-columns='KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,SERVICE_ACCOUNTS:subjects[?(@.kind=="ServiceAccount")].name'
 }
-
 
 gfpo() {
   git push -f origin $(git status | head -1 | cut -d ' ' -f3)
@@ -238,6 +236,15 @@ terraform {
 }
 EOF
 }
+
+find_instance_by_id() {
+  for region in `aws ec2 describe-regions --query "Regions[].{Name:RegionName}" --output text`; do
+    echo "Searching in $region"
+    aws ec2 describe-instances --instance-ids=$1 --query=Reservations[].Instances[].[InstanceId,InstanceType,PrivateDnsName,PublicDnsName,InstanceLifecycle,SecurityGroups,Tags] --region=$region
+    if [[ $? -eq 0 ]]; then break; fi
+  done
+}
+
 function wttr(){ curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Ansbach}"}
 alias my='mycli --login-path'
 #source $(dirname $(gem which colorls))/tab_complete.sh
@@ -264,3 +271,4 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 export PATH=$PATH:/code/devel-tools/aws-sso/bin
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.work_related_aliases ] && source ~/.work_related_aliases

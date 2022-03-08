@@ -278,6 +278,42 @@
       tags: awscli
 
     - block:
+      - name: Check if minikube is installed
+        stat:
+          path: /usr/local/bin/minikube
+        register: minikube
+
+      - block:
+        - name: Download minikube binary.
+          get_url:
+            url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+            dest: /tmp/minikube-linux-amd64
+
+        - name: Install minikube.
+          shell: install /tmp/minikube-linux-amd64 /usr/local/bin/minikube
+          become: yes
+        when: not minikube.stat.exists
+
+      tags: minikube
+
+    - block:
+      - name: Check if istioctl is installed
+        stat:
+          path: /usr/local/bin/istioctl
+        register: istioctl
+
+      - block:
+        - name: Install istioctl latest version.
+          shell: |
+            curl -L https://istio.io/downloadIstio | sh -
+            cp ./istio-*/bin/istioctl /usr/local/bin/
+            rm -rf istio-*
+          become: yes
+        when: not istioctl.stat.exists
+
+      tags: istioctl
+
+    - block:
       - name: Check if Golang is installed
         stat:
           path: /usr/local/go
@@ -532,9 +568,11 @@
                - wappalyzer
                - ublock-origin
                - tree-style-tab
+               - sidebery
                - i-dont-care-about-cookies
                - to-google-translate
                - translate-web-pages
+               - clearcache
               preferences:
                 privacy.donottrackheader.enabled: true
                 privacy.trackingprotection.enabled: true

@@ -89,7 +89,8 @@ schemes:
 
   ayu_dark: &ayu_dark
     primary:
-      background: '0x0A0E14'
+      background: "#000000"
+      #background: '0x0A0E14'
       foreground: '0xB3B1AD'
     normal:
       black:   '0x01060E'
@@ -1566,6 +1567,34 @@ schemes:
       cyan:    '#87d7d7'
       white:   '#e4e4e4'
 
+  monokai-pro-dark: &monokai-pro-dark
+    primary:
+      #background: '#2D2A2E'
+      background: "#000000"
+      foreground: "#FCFCFA"
+
+    # Normal colors
+    normal:
+      black: "#403E41"
+      red: "#FF6188"
+      green: "#A9DC76"
+      yellow: "#FFD866"
+      blue: "#FC9867"
+      magenta: "#AB9DF2"
+      cyan: "#78DCE8"
+      white: "#FCFCFA"
+
+    # Bright colors
+    bright:
+      black: "#727072"
+      red: "#FF6188"
+      green: "#A9DC76"
+      yellow: "#FFD866"
+      blue: "#FC9867"
+      magenta: "#AB9DF2"
+      cyan: "#78DCE8"
+      white: "#FCFCFA"
+
   popOS: &popOS
     # Default colors
     primary:
@@ -1594,5 +1623,5 @@ schemes:
       cyan:    '#34E2E2'
       white:   '#EEEEEC'
 
-colors: *ayu_dark
+colors: *monokai-pro-dark
 

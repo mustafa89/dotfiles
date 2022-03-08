@@ -3,7 +3,7 @@
 	editor = nvim
 [user]
 	name = Mustafa Mujahid
-	email = mustafa.mujahid@tradebyte.com
+	email = mustafa.mujahid@codility.com
 [alias]
 	st = status
 	co = checkout
