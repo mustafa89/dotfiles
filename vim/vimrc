@@ -29,6 +29,7 @@ set termguicolors
 set linespace=3
 set guifont=Fira\ Code:h12
 set cursorline
+set shell=/bin/zsh
 syntax enable
 "set cursorcolumn
 
@@ -42,11 +43,12 @@ let g:gruvbox_termcolors=16
 "colorscheme molokai
 "colorscheme alduin
 "colorscheme jellybeans
-colorscheme badwolf
+"colorscheme badwolf
 "colorscheme hybrid_reverse
 "colorscheme solarflare
 "colorscheme gruvbox
 "colorscheme heroku-contrast
+colorscheme hybrid
 set background=dark
 
 let g:badwolf_darkgutter = 1
@@ -60,6 +62,16 @@ let g:jellybeans_use_term_italics = 1
 
 hi Normal guibg=black ctermbg=NONE
 map <C-n> :NERDTreeToggle<CR>
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+" Switch between different windows by their direction`
+noremap <S-Down> <C-w>j
+noremap <S-Up> <C-w>k
+noremap <S-Right> <C-w>l
+noremap <S-Left> <C-w>h
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 let g:molokai_original = 1
 set lazyredraw
 set synmaxcol=180
@@ -69,6 +81,10 @@ set ttyfast
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
+" Comment line(s)
+:vnoremap <C-c> :norm i#<CR>
+" Uncomment line(s)
+:vnoremap <C-l> :norm ^x<CR>
 "========================"
 
 if has("autocmd")

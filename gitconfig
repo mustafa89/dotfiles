@@ -20,3 +20,6 @@
 [tig]
 	line-graphics = no
 	main-view = line-number:no,interval=5 id:no date:default author:full commit-title:yes,refs,overflow=no
+[credential]
+	helper = !aws codecommit credential-helper $@
+	UseHttpPath = true

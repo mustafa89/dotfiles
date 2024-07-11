@@ -23,9 +23,11 @@ Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'gabrielelana/vim-markdown'
 Plug 'cespare/vim-toml'
 Plug 'morhetz/gruvbox'
-Plug 'crusoexia/vim-monokai',
-Plug 'sjl/badwolf',
-Plug 'pangloss/vim-javascript',
+Plug 'crusoexia/vim-monokai'
+Plug 'sjl/badwolf'
+Plug 'pangloss/vim-javascript'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'maxmellon/vim-jsx-pretty'
+Plug 'fatih/vim-go'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()

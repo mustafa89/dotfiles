@@ -5,7 +5,7 @@
   become: false
   vars:
     ansible_python_interpreter: /usr/bin/python3
-    go_version: "1.16.4"
+    go_version: "1.20.4"
 
   tasks:
     - block:
@@ -245,10 +245,17 @@
         deb: https://github.com/sharkdp/bat/releases/download/v0.18.0/bat-musl_0.18.0_amd64.deb
       become: yes
 
-    - name: Install slack desktop
-      apt:
-        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.14.0-amd64.deb
-      become: yes
+    - block:
+      - name: check if slack is installed
+        stat:
+          path: /usr/bin/slack
+        register: slack
+
+      - name: Install slack desktop
+        apt:
+          deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.14.0-amd64.deb
+        become: yes
+        when: not slack.stat.exists
       tags: slack
 
     - block:
@@ -296,22 +303,6 @@
 
       tags: minikube
 
-    - block:
-      - name: Check if istioctl is installed
-        stat:
-          path: /usr/local/bin/istioctl
-        register: istioctl
-
-      - block:
-        - name: Install istioctl latest version.
-          shell: |
-            curl -L https://istio.io/downloadIstio | sh -
-            cp ./istio-*/bin/istioctl /usr/local/bin/
-            rm -rf istio-*
-          become: yes
-        when: not istioctl.stat.exists
-
-      tags: istioctl
 
     - block:
       - name: Check if Golang is installed
@@ -428,6 +419,28 @@
           - _kubectx.zsh
 
       tags: kubens
+
+    - block:
+      - name: Check if istioctl is installed
+        stat:
+          path: /usr/local/bin/istioctl
+        register: istioctl
+
+      - block:
+        - name: Install istioctl latest version.
+          shell: |
+            curl -L https://istio.io/downloadIstio | sh -
+            cp ./istio-*/bin/istioctl /usr/local/bin/
+            rm -rf istio-*
+          become: yes
+
+        - name: Generate completions.
+          shell: |
+            /usr/local/bin/istioctl completion zsh > ~/.oh-my-zsh/completions/_istioctl
+
+        when: not istioctl.stat.exists
+
+      tags: istioctl
 
     - block:
       - name: Check if zsh-suggestions exists
@@ -573,6 +586,9 @@
                - to-google-translate
                - translate-web-pages
                - clearcache
+               - bitwarden-password-manager
+               - grammarly-1
+               - react-devtools
               preferences:
                 privacy.donottrackheader.enabled: true
                 privacy.trackingprotection.enabled: true
@@ -582,6 +598,7 @@
                 app.shield.optoutstudies.enabled: false
                 toolkit.legacyUserProfileCustomizations.stylesheets: true
                 browser.fullscreen.autohide: false
+                app.update.auto: false
         register: create_profile
 
       - name: firefox - create chrome directory

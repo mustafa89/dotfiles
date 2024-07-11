@@ -95,7 +95,10 @@ docker-compose
 kubectl
 helm
 fzf
+asdf
 )
+
+fpath+=${ZSH:-~/.oh-my-zsh/}completions
 
 source $ZSH/oh-my-zsh.sh
 
@@ -140,7 +143,6 @@ alias gst="git status"
 alias gd="git diff"
 alias gdc="git diff --cached"
 alias gl="git log"
-alias gco="git checkout"
 alias gcob="git checkout -b"
 alias gfet='git fetch'
 alias greb='git rebase -i origin/master'
@@ -164,10 +166,15 @@ alias master="git checkout origin/master"
 alias ctx="kubectx"
 alias ens="kubens"
 
+[ -f ~/.work_related_aliases ] && source ~/.work_related_aliases
 
 rbac-lookup() {
 kubectl get rolebindings,clusterrolebindings --all-namespaces \
   -o custom-columns='KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,SERVICE_ACCOUNTS:subjects[?(@.kind=="ServiceAccount")].name'
+}
+
+gitco() {
+  git checkout $(git symbolic-ref refs/remotes/origin/HEAD --short)
 }
 
 gfpo() {
@@ -195,6 +202,19 @@ git config --local user.email "mustafa.mujahid@outlook.com"
 gitcp() {
   git cherry-pick $@
 }
+
+fpush() {
+  git add -A && git commit --fixup $(git rev-parse HEAD) && git rebase origin/master --interactive --autosquash --autostash && gfpo
+}
+
+ggp() {
+  git grep "$@"
+}
+
+fu() {
+  tg force-unlock "$@"
+}
+
 
 terrainit() {
 echo 'provider "aws" {\n  profile = var.aws_profile\n  region = var.aws_region\n}' > main.tf
@@ -237,15 +257,8 @@ terraform {
 EOF
 }
 
-find_instance_by_id() {
-  for region in `aws ec2 describe-regions --query "Regions[].{Name:RegionName}" --output text`; do
-    echo "Searching in $region"
-    aws ec2 describe-instances --instance-ids=$1 --query=Reservations[].Instances[].[InstanceId,InstanceType,PrivateDnsName,PublicDnsName,InstanceLifecycle,SecurityGroups,Tags] --region=$region
-    if [[ $? -eq 0 ]]; then break; fi
-  done
-}
-
 function wttr(){ curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Ansbach}"}
+function ipv4(){ curl -4 canhazip.com }
 alias my='mycli --login-path'
 #source $(dirname $(gem which colorls))/tab_complete.sh
 
@@ -253,12 +266,16 @@ alias my='mycli --login-path'
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/terraform terraform
 
+#export TF_PLUGIN_CACHE_DIR=~/plugin-cache
 
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
 export GOPATH=~/go/packages
 export PATH=$PATH:$GOPATH/bin
 export GOPATH=$GOPATH:~/aws/go
+export GOBIN=$GOPATH/bin
+
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # setup export for node nvm
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
@@ -269,6 +286,14 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 
 
 export PATH=$PATH:/code/devel-tools/aws-sso/bin
+#export PATH=$PATH:/home/mustafa/bin
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.work_related_aliases ] && source ~/.work_related_aliases
+
+
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"

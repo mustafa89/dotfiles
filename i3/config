@@ -220,7 +220,9 @@ colors {
 
 
 #wallapaper
-exec_always --no-startup-id feh --bg-scale ~/Pictures/dystopia.jpg
+exec_always --no-startup-id feh --bg-center ~/Pictures/dystopia.jpeg
+#exec_always --no-startup-id feh --bg-scale ~/Pictures/sdss.jpeg
+
 
 
 # Pulse Audio controls
@@ -230,7 +232,8 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume @DEFA
 bindsym XF86AudioMute exec --no-startup-id pactl -- set-sink-mute @DEFAULT_SINK@ toggle # mute sound
 
 # Switch to soundbar
-bindsym $mod+i exec "pacmd set-card-profile 1 output:hdmi-stereo-extra1+input:analog-stereo && pacmd set-default-sink alsa_output.pci-0000_00_1f.3.hdmi-stereo-extra1"
+#bindsym $mod+i exec "pacmd set-card-profile 1 output:hdmi-stereo-extra1+input:analog-stereo && pacmd set-default-sink alsa_output.pci-0000_00_1f.3.hdmi-stereo-extra1"
+bindsym $mod+i exec "pacmd set-default-sink alsa_output.pci-0000_00_1f.3-platform-sof_sdw.HiFi__hw_sofsoundwire_6__sink"
 #bindsym XF86AudioRaiseVolume exec amixer sset Master 5%+
 #bindsym XF86AudioLowerVolume exec amixer sset Master 5%-
 #bindsym XF86AudioMute exec amixer -D pulse set Master 1+ toggle
