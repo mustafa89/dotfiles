@@ -56,3 +56,31 @@ And also a large number of vim plugins and third party packages. Thankyou for th
 - [DotBot](https://github.com/anishathalye/dotbot) is used to connect the actual dotfiles.
 - Deoplete may require running `:UpdateRemotePlugins` the first time.
 - If `zsh` doesn't start, we have to manully `chsh -s $(which zsh)` as well in some case.
+
+## macOS Setup
+
+### Setting up on macOS
+
+To set up this configuration on a macOS machine, use the `mac-os` branch which contains optimizations specific to macOS:
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/dotfiles.git
+
+# Change to the repository directory
+cd dotfiles
+
+# Switch to the mac-os branch
+git checkout mac-os
+
+# Run the installation script
+./install.sh
+```
+
+The `mac-os` branch includes:
+- macOS-specific configurations and optimizations
+- Compatible keyboard shortcuts
+- Terminal configurations for macOS
+- Homebrew package installations
+- Font configurations for macOS
+- Integration with macOS services
