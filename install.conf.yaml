@@ -1,40 +1,36 @@
 - defaults:
     link:
-      create: true
       relink: true
+      create: true
 
 - clean: ['~', '~/.config']
-
 - link:
-    ~/.bash_profile: bash_profile
-    ~/.gitconfig: gitconfig
-    ~/.vim: vim
+    ~/.zshrc:
+      force: true
+      path: zshrc
     ~/.p10k.zsh: p10k.zsh
-    ~/.config/nvim/init.vim: nvim/init.vim
-    ~/Pictures/dystopia.jpg: images/dystopis1.jpg
-    ~/.config/alacritty/alacritty.yml: alacritty.yml
-    ~/.config/alacritty/schemes.yml: schemes.yml
-    ~/.config/gtk-3.0/settings.ini:
-      force: true
-      path: gtksettings.ini
-    ~/.config/i3:
-      force: true
-      path: i3
-    ~/.screenlayout: screenlayout
     ~/.vimrc:
       force: true
       path: vim/vimrc
     ~/.bashrc:
       force: true
       path: bashrc
-    ~/.zshrc:
-      force: true
-      path: zshrc
+    ~/.config/nvim/init.vim: nvim/init.vim
+    ~/.gitconfig: gitconfig
+    ~/.config/alacritty/alacritty.toml: alacritty.toml
+    ~/.bash_profile: bash_profile
+    ~/.vim: vim
+    ~/.config/aerospace/aerospace.toml: aerospace.toml
+    ~/.terraformrc: terraformrc
 
 - shell:
-    - ['git submodule update --init --recursive', 'Installing submodules... ']
-    - ['fonts/install.sh', 'Install powerline fonts... ']
-    - ['pip3 install pynvim', 'Install pynvim for neovim... ']
-    - ['sudo npm i -g gitmoji-cli', 'Install  gitmoji-cli... ']
-    - ['sudo npm i -g git-checkout-interactive', 'Install  gci... ']
+    - [git submodule update --init --recursive, Installing submodules]
+    - [mkdir -p ~/.config/nvim, Creating Neovim config directory]
+    - [mkdir -p ~/.config/alacritty, Creating Alacritty config directory]
+    - [mkdir -p ~/.config/aerospace, Creating Aerospace config directory]
+    - [mkdir -p ~/.config/alacritty/themes, Creating Alacritty themes directory]
+    - [git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes, Cloning Alacritty themes]
 
+    #- ['pipx install pynvim || pip install pynvim', 'Install pynvim for neovim... ']
+    # - ['sudo npm i -g gitmoji-cli', 'Install  gitmoji-cli... ']
+    # - ['sudo npm i -g git-checkout-interactive', 'Install  gci... ']

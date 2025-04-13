@@ -1,334 +1,189 @@
 ---
 - hosts: localhost
-  remote_user: ubuntu
   connection: local
   become: false
+
   vars:
     ansible_python_interpreter: /usr/bin/python3
-    go_version: "1.20.4"
+    current_user: "{{ lookup('env', 'USER') }}"
+    sudoers_custom_config: |
+      # Allow current user to use sudo with no password.
+      {{ current_user }} ALL=(ALL) NOPASSWD: ALL
 
   tasks:
     - block:
-      - name: Update apt cache
-        apt:
-          update_cache: true
-        become: true
-        changed_when: false
-
-      - name: Upgrade system
-        apt:
-          upgrade: dist
-        become: true
-
-      - name: Remove unused packages
-        apt:
-          autoremove: true
-        become: true
-
-      - name: Clean apt cache
-        apt:
-          autoclean: true
-        become: true
-      tags: update-system
-
-    - name: configure sudoers
-      become: true
-      become_user: root
-      lineinfile:
-        path: /etc/sudoers
-        line: "{{ ansible_user_id }} ALL=(ALL) NOPASSWD:ALL"
-        regexp: "^{{ ansible_user_id }}\\s+"
-      tags: sudo
+      - name: Configure passwordless sudo for user
+        shell: |
+          echo "{{ sudoers_custom_config }}" | sudo tee /private/etc/sudoers.d/custom
+          sudo chmod 0440 /private/etc/sudoers.d/custom
+        args:
+          creates: /private/etc/sudoers.d/custom
+      tags: passwordless-sudo
 
     - block:
-      - name: Add an Apt signing key for the brave browser
-        apt_key:
-          url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
-          state: present
-        become: true
-
-      - name: Add specified repository into sources list for brave
-        apt_repository:
-          repo: deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
-          state: present
-        become: true
-      tags: brave
+      - name: Ensure /usr/local/bin exists
+        shell: sudo mkdir -p /usr/local/bin && sudo chmod 0755 /usr/local/bin
+        args:
+          creates: /usr/local/bin
+      tags: system-setup
 
     - block:
-      - name: Add an Apt signing key for vscode
-        apt_key:
-          url: https://packages.microsoft.com/keys/microsoft.asc
-          state: present
-        become: true
+      - name: Base setup MAC
+        include_role:
+          name: ansible-collection-mac/roles/homebrew
+        vars:
+          # Custom configuration to handle "already installed" exceptions
+          homebrew_cask_accept_external_apps: true
+          homebrew_use_brewfile: false
+          homebrew_upgrade_all_packages: false
 
-      - name: Add specified repository into sources list for vscode
-        apt_repository:
-          repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
-          state: present
-        become: true
-      tags: vscode
+          homebrew_taps:
+            - warrensbox/tap
+            - nikitabobko/tap
+            - FelixKratz/formulae
+            - buo/cask-upgrade
+            - aws/tap
+            - th-ch/youtube-music
+
+          homebrew_installed_packages:
+            - eks-node-viewer
+            - gitmoji
+            - awscli
+            - helm
+            - tfswitch
+            - tgswitch
+            - pyenv
+            - neovim
+            - pyvim
+            - docker
+            - docker-buildx
+            - postgresql
+            - tig
+            - zsh
+            - kubectl
+            - curl
+            - wget
+            - tree
+            - tcpdump
+            - htop
+            - cmatrix
+            - jq
+            - pv
+            - bat
+            - golang
+            - pipx
+            - fzf
+            - kubectx
+            - istioctl
+            - nvm
+            - dockutil
+            - sketchybar
+            - borders
+
+          homebrew_cask_apps:
+            - session-manager-plugin
+            - docker
+            - brave-browser
+            - visual-studio-code
+            - slack
+            - iterm2
+            - rectangle
+            - alfred
+            - flameshot
+            - vlc
+            - alacritty
+            - sloth
+            - raycast
+            - aerospace
+            - font-hack-nerd-font
+            - font-fira-code
+            - font-ubuntu
+            - font-fontawesome
+            - font-hack-nerd-font
+            - font-fira-code-nerd-font
+            - font-monocraft
+            - font-material-icons
+            - youtube-music
+      tags:
+        - homebrew
+    
+    - block:
+      - name: Upgrade all installed packages and casks
+        command: brew upgrade
+      - name: Upgrade all installed casks
+        command: brew cu --all --yes
+      tags: 
+        - upgrade
 
     - block:
-      - name: Add an Apt signing key for packer
-        apt_key:
-          url: https://apt.releases.hashicorp.com/gpg
-          state: present
-        become: true
+      - name: Install dockutil
+        include_role:
+          name: ansible-collection-mac/roles/dock
+        vars:
+          dockutil_install: false
+          dockitems_remove:
+            - 'Launchpad'
+            - 'TV'
+            - 'Podcasts'
+            - 'App Store'
+            - 'Mail'
+            - 'Calendar'
+            - 'Contacts'
+            - 'Notes'
+            - 'Reminders'
+            - 'Pages'
+            - 'Numbers'
+            - 'Keynote'
+            - 'Safari'
+            - 'Messages'
+            - 'FaceTime'
+            - 'Maps'
+            - 'Music'
+            - 'Podcasts'
+            - 'Freeform'
 
-      - name: Add specified repository into sources list for packer
-        apt_repository:
-          repo: deb [arch=amd64] https://apt.releases.hashicorp.com bionic main
-          state: present
-        become: true
-      tags: packer
+          dockitems_persist:
+            - name: Safari
+              path: "/Applications/Safari.app/"
+              pos: 2
+      tags: dock
 
-    - block:
-      - name: Add an Apt signing key for helm
-        apt_key:
-          url: https://baltocdn.com/helm/signing.asc
-          state: present
-        become: true
+    # - block:
+    #   - name: Check if MacPorts is installed
+    #     stat:
+    #       path: /opt/local/bin/port
+    #     register: macports_check
 
-      - name: Add specified repository into sources list for helm
-        apt_repository:
-          repo: deb https://baltocdn.com/helm/stable/debian/ all main
-          state: present
-        become: true
-      tags: helm
+    #   - name: Download MacPorts installer
+    #     get_url:
+    #       url: "https://github.com/macports/macports-base/releases/download/v2.10.5/MacPorts-2.10.5-15-Sequoia.pkg"
+    #       dest: "/tmp/MacPorts-2.10.5-Sequoia.pkg"
+    #     when: not macports_check.stat.exists
 
-    - block:
-      - name: Add an Apt signing key for kubectl
-        apt_key:
-          url:  https://packages.cloud.google.com/apt/doc/apt-key.gpg
-          keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
-          state: present
-        become: true
+    #   - name: Install MacPorts using installer command
+    #     shell: |
+    #       sudo installer -pkg /tmp/MacPorts-2.10.5-Sequoia.pkg -target / -verbose
+    #     when: not macports_check.stat.exists
 
-      - name: Add specified repository into sources list for helm
-        apt_repository:
-          repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
-          state: present
-        become: true
-      tags: kubectl
+    #   - name: Create symlink for port in /usr/local/bin
+    #     command: sudo ln -sf /opt/local/bin/port /usr/local/bin/port
+    #     when: not macports_check.stat.exists
 
-    - block:
-      - name: Add an apt key by id from the ubuntu keyserver for i3 gaps
-        apt_key:
-          keyserver: keyserver.ubuntu.com
-          id: BDA0E4BA891B327BB00DF1E076458020C35556DC
-        become: true
+    #   - name: Update MacPorts
+    #     command: sudo port selfupdate
+    #     when: macports_check.stat.exists
+    #     changed_when: false
 
-      - name: Add specified repository into sources list for i3-gaps
-        apt_repository:
-          repo:  "{{ item }}"
-          state: present
-        with_items:
-          - deb http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
-          - deb-src http://ppa.launchpad.net/kgilmer/speed-ricer/ubuntu bionic main
-        become: true
-      tags: gaps
-
-    - block:
-      - name: Add an apt key by id from the ubuntu keyserver for Neovim
-        apt_key:
-          keyserver: keyserver.ubuntu.com
-          id: 9DBB0BE9366964F134855E2255F96FCF8231B6DD
-        become: true
-
-      - name: Add specified repository into sources list for Neovim
-        apt_repository:
-          repo:  "{{ item }}"
-          state: present
-        with_items:
-          - deb http://ppa.launchpad.net/neovim-ppa/stable/ubuntu bionic main
-          - deb-src http://ppa.launchpad.net/neovim-ppa/stable/ubuntu bionic main
-        become: true
-      tags: neovim
-
-    - block:
-      - name: Add an apt key by id from the ubuntu keyserver for alacritty
-        apt_key:
-          keyserver: keyserver.ubuntu.com
-          id: 5B7FC40A404FAD98548806028AC9B4BBBAB4900B
-        become: true
-
-      - name: Add specified repository into sources list for alacritty
-        apt_repository:
-          repo:  "{{ item }}"
-          state: present
-        with_items:
-          - deb http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main
-          - deb-src http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main
-        become: true
-      tags: alacritty
-
-    - name: Install packages
-      become: yes
-      apt:
-        name: "{{ packages }}"
-        state: present
-        update_cache: yes
-      vars:
-        packages:
-          - feh
-          - packer
-          - helm
-          - composer
-          - compton
-          - hexchat
-          - apt-transport-https
-          - software-properties-common
-          - gnupg
-          - flameshot
-          - brave-browser
-          - pulseaudio
-          - pulseaudio-utils
-          - redshift-gtk
-          - code
-          - vim
-          - neovim
-          - alacritty
-          - docker
-          - dnsutils
-          - vlc
-          - postgresql-client
-          - tig
-          - i3lock
-          - i3-gaps
-          - zsh
-          - kubectl
-          - zsh-syntax-highlighting
-          - zsh-antigen
-          - gem
-          - rofi
-          - gnome-tweak-tool
-          - breeze-cursor-theme
-          - breeze-icon-theme
-          - gtk3-engines-breeze
-          - lxappearance
-          - python3
-          - python3-pip
-          - python3-venv
-          - virtualenv
-          - pylint3
-          - curl
-          - wget
-          - tree
-          - traceroute
-          - tcpdump
-          - pm-utils
-          - net-tools
-          - network-manager-openconnect
-          - network-manager-openvpn
-          - network-manager
-          - htop
-          - npm
-          - manpages
-          - blueman
-          - cmatrix
-          - x11-xserver-utils
-          - arandr
-          - neofetch
-          - meld
-          - openjdk-8-jre
-          - openjfx
-          - virtualbox
-          - jq
-          - pv
-      tags: packages
+    #   - name: Install meld via MacPorts
+    #     command: sudo port install meld
+    #     register: meld_install
+    #     changed_when: "'Successfully installed' in meld_install.stdout"
+    #   tags: macports
 
     - name: install dotbot
-      shell: pip3 install dotbot
-
-    - name: Install bat for cat
-      apt:
-        deb: https://github.com/sharkdp/bat/releases/download/v0.18.0/bat-musl_0.18.0_amd64.deb
-      become: yes
-
-    - block:
-      - name: check if slack is installed
-        stat:
-          path: /usr/bin/slack
-        register: slack
-
-      - name: Install slack desktop
-        apt:
-          deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.14.0-amd64.deb
-        become: yes
-        when: not slack.stat.exists
-      tags: slack
-
-    - block:
-      - name: Check if awscli is installed
-        stat:
-          path: /usr/local/bin/aws
-        register: aws
-
-      - block:
-        - name: Download the awscli bundle.
-          get_url:
-            url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-            dest: /tmp/awscli-bundle.zip
-
-        - name: Unarchive the installer.
-          unarchive:
-            src: /tmp/awscli-bundle.zip
-            dest: /tmp
-            copy: no
-            creates: /tmp/aws
-
-        - name: Install awscli package.
-          shell: bash /tmp/aws/install
-          become: yes
-        when: not aws.stat.exists
-
-      tags: awscli
-
-    - block:
-      - name: Check if minikube is installed
-        stat:
-          path: /usr/local/bin/minikube
-        register: minikube
-
-      - block:
-        - name: Download minikube binary.
-          get_url:
-            url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-            dest: /tmp/minikube-linux-amd64
-
-        - name: Install minikube.
-          shell: install /tmp/minikube-linux-amd64 /usr/local/bin/minikube
-          become: yes
-        when: not minikube.stat.exists
-
-      tags: minikube
-
-
-    - block:
-      - name: Check if Golang is installed
-        stat:
-          path: /usr/local/go
-        register: golang
-
-      - name: Download Golang
-        get_url:
-          url: "https://golang.org/dl/go{{ go_version }}.linux-amd64.tar.gz"
-          dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
-          mode: '0644'
-        when: not golang.stat.exists
-        become: yes
-
-      - name: Install Golang
-        command: "tar -C /usr/local -xzf /tmp/go{{ go_version }}.linux-amd64.tar.gz"
-        when: not golang.stat.exists
-        become: yes
-
-      - name: Add Golang to the PATH
-        shell: export PATH=$PATH:/usr/local/go/bin
-        when: not golang.stat.exists
-        become: yes
-      tags: go
-
+      pip:
+        name: dotbot
+        state: present
 
     - block:
       - name: Check if .oh-my-zsh exists
@@ -367,80 +222,12 @@
       tags: pk10
 
     - block:
-      - name: Check if .fzf exists
-        stat:
-          path: ~/.fzf
-        register: stat_fzf_result
-
-      - name: Get fzf
-        command: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-        when: not stat_fzf_result.stat.exists
-
-      - name: Execute the fzf installer
-        shell: ~/.fzf/install
-        when: not stat_fzf_result.stat.exists
-      tags: fzf
-
-    - block:
-      - name: install kubens/kubectx
-        git:
-          repo: 'https://github.com/ahmetb/kubectx.git'
-          dest: '/opt/kubectx'
-          update: yes
-          force: yes
-          clone: yes
-        become: yes
-
-      - name: create kubectx simlink
-        file:
-          src: "/opt/kubectx/{{ item }}"
-          dest: "/usr/local/bin/{{ item }}"
-          state: link
-          force: yes
-        with_items:
-          - kubens
-          - kubectx
-        become: yes
-
       - name: create completions directory
         file:
           path: ~/.oh-my-zsh/completions
           state: directory
           recurse: yes
-
-      - name: create kubens completions simlink
-        file:
-          src: "/opt/kubectx/completion/{{ item }}"
-          dest: "~/.oh-my-zsh/completions/{{ item }}"
-          state: link
-          force: yes
-        with_items:
-          - _kubens.zsh
-          - _kubectx.zsh
-
       tags: kubens
-
-    - block:
-      - name: Check if istioctl is installed
-        stat:
-          path: /usr/local/bin/istioctl
-        register: istioctl
-
-      - block:
-        - name: Install istioctl latest version.
-          shell: |
-            curl -L https://istio.io/downloadIstio | sh -
-            cp ./istio-*/bin/istioctl /usr/local/bin/
-            rm -rf istio-*
-          become: yes
-
-        - name: Generate completions.
-          shell: |
-            /usr/local/bin/istioctl completion zsh > ~/.oh-my-zsh/completions/_istioctl
-
-        when: not istioctl.stat.exists
-
-      tags: istioctl
 
     - block:
       - name: Check if zsh-suggestions exists
@@ -476,140 +263,149 @@
           path: ~/.nvm/install.sh
         register: stat_nvm_result
 
-      - name: Download nvm installer
-        get_url:
-          url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh
-          dest: /tmp/nvm_install.sh
-          mode: '0747'
-        when: not stat_nvm_result.stat.exists
+      - name: Install latest stable node version
+        shell: |
+          source ~/.nvm/nvm.sh
+          nvm install stable
+        args:
+          executable: /bin/bash
+        when: stat_nvm_result.stat.exists
 
-      - name: Execute the nvm_installer.sh
-        shell: /tmp/nvm_install.sh
-        when: not stat_nvm_result.stat.exists
+      - name: Install latest stable npm release
+        shell: |
+          source ~/.nvm/nvm.sh
+          nvm install-latest-npm
+        args:
+          executable: /bin/bash
+        when: stat_nvm_result.stat.exists
       tags: nvm
 
+    - block:
+      - name: Install sketchybar using FelixKratz's installation script
+        shell: curl -L https://raw.githubusercontent.com/FelixKratz/dotfiles/master/install_sketchybar.sh | sh
+        args:
+          creates: "{{ lookup('env', 'HOME') }}/.config/sketchybar/sketchybarrc"
+        register: sketchybar_install
+        changed_when: sketchybar_install.rc == 0
+      tags: sketchybar
+
     - name: run dotbot
-      command: ~/.local/bin/dotbot -c install.conf.yaml
+      command: dotbot -c install.conf.yaml
       tags: dots
 
-    - name: Install psutil for bumblebee status line
-      command: pip install psutil
-      tags: psutil
-
-    - name: Need the light binary to control screen brightness
-      copy:
-        src: ./light
-        dest: /usr/local/bin/light
-        owner: root
-        group: root
-        mode: "6755"
-      become: yes
-
-    - name: COPY over the xorg.conf
-      copy:
-        src: ./xorg.conf
-        dest: /etc/X11/xorg.conf
-        owner: root
-        group: root
-        mode: "0644"
-      become: yes
-
-    - name: Ensures xorg.conf.d directory exists
-      file:
-        path: /etc/X11/xorg.conf.d
-        state: directory
-      become: yes
-
-    - name: COPY over the touchpad config
-      copy:
-        src: touchpadx11
-        dest: /etc/X11/xorg.conf.d/90-touchpad.conf
-        owner: root
-        group: root
-        mode: "0644"
-      become: yes
-
     - name: install vim plugins
-      command: /usr/bin/nvim --headless +PlugInstall +qall
+      command: nvim --headless +PlugInstall +qall
       register: vim_plugins_stdout
-      check_mode: false
-      changed_when: vim_plugins_stdout.stdout_lines|length != 0
       tags: vim-update
 
     - name: set default shell for user
-      shell: "usermod -s $(which zsh) {{ ansible_user_id }}"
-      become: yes
-
-    - name: Restore terminal profiles
-      shell: |
-        dconf load /org/gnome/terminal/legacy/profiles:/:7fcf6e99-a228-4688-b1cc-982f03c07788/ < terminaltheme-dark-profile.dconf
-        dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < terminaltheme-profile.dconf
-      tags: dconf
+      shell: "chsh -s $(which zsh)"
+      when: ansible_user_shell != "/bin/zsh"
 
     - block:
-      - name: install docker
-        include_role:
-          name: ansible-role-docker
-        vars:
-          docker_edition: 'ce'
-          docker_package: "docker-{{ docker_edition }}"
-          docker_package_state: latest
-          docker_service_state: started
-          docker_service_enabled: true
-          docker_restart_handler_state: restarted
-          docker_users:
-            - "{{ ansible_user_id }}"
-          docker_daemon_options:
-            storage-driver: "devicemapper"
-            log-opts:
-              max-size: "100m"
-          docker_install_compose: true
-          docker_compose_version: "1.29.0"
-          docker_compose_path: /usr/local/bin/docker-compose
-      become: yes
-      tags: docker
+      - name: Define variables
+        set_fact:
+          firefox_extension_base_url: "https://addons.mozilla.org/firefox/downloads/latest"
+          firefox_extensions:
+            - adblock-plus
+            - wappalyzer
+            - ublock-origin
+            - tree-style-tab
+            - sidebery
+            - i-dont-care-about-cookies
+            - to-google-translate
+            - translate-web-pages
+            - clearcache
+            - bitwarden-password-manager
+            - grammarly-1
+            - react-devtools
+          firefox_preferences:
+            privacy.donottrackheader.enabled: true
+            privacy.trackingprotection.enabled: true
+            signon.rememberSignons: false
+            datareporting.healthreport.uploadEnabled: false
+            browser.aboutConfig.showWarning: false
+            app.shield.optoutstudies.enabled: false
+            toolkit.legacyUserProfileCustomizations.stylesheets: true
+            browser.fullscreen.autohide: false
+            app.update.auto: false
+          firefox_global_dir: "/Applications/Firefox.app/Contents/Resources"
 
-    - block:
-      - name: Configure Firefox for nebula brain level productivity :D
-        include_role:
-          name: ansible-firefox
-        vars:
-          firefox_profiles:
-            default:
-              extensions:
-               - adblock-plus
-               - wappalyzer
-               - ublock-origin
-               - tree-style-tab
-               - sidebery
-               - i-dont-care-about-cookies
-               - to-google-translate
-               - translate-web-pages
-               - clearcache
-               - bitwarden-password-manager
-               - grammarly-1
-               - react-devtools
-              preferences:
-                privacy.donottrackheader.enabled: true
-                privacy.trackingprotection.enabled: true
-                signon.rememberSignons: false
-                datareporting.healthreport.uploadEnabled: false
-                browser.aboutConfig.showWarning: false
-                app.shield.optoutstudies.enabled: false
-                toolkit.legacyUserProfileCustomizations.stylesheets: true
-                browser.fullscreen.autohide: false
-                app.update.auto: false
-        register: create_profile
-
-      - name: firefox - create chrome directory
+      - name: Ensure system-wide extensions directory exists
         file:
-          path: "{{ create_profile.profile_path }}/chrome/"
+          path: "{{ firefox_global_dir }}/distribution/extensions"
           state: directory
           mode: '0755'
 
-      - name: firefox - configure firefox custom css
+      - name: Download and install Firefox extensions system-wide
+        get_url:
+          url: "{{ firefox_extension_base_url }}/{{ item }}/addon-{{ item }}-latest.xpi"
+          dest: "{{ firefox_global_dir }}/distribution/extensions/{{ item }}.xpi"
+          mode: '0644'
+        loop: "{{ firefox_extensions }}"
+
+      - name: Create system-wide policies.json for enforced settings
         copy:
-          dest: "{{ create_profile.profile_path }}/chrome/userChrome.css"
+          dest: "{{ firefox_global_dir }}/distribution/policies.json"
+          content: |
+            {
+              "policies": {
+                "Extensions": {
+                  "Install": [
+                    {% for ext in firefox_extensions %}
+                    "file://{{ firefox_global_dir }}/distribution/extensions/{{ ext }}.xpi"{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                  ]
+                },
+                "Preferences": {
+                  {% for key, value in firefox_preferences.items() %}
+                  "{{ key }}": {{ value | to_json }}{% if not loop.last %},{% endif %}
+                  {% endfor %}
+                }
+              }
+            }
+          mode: '0644'
+
+      - name: Ensure system-wide preferences directory exists
+        file:
+          path: "{{ firefox_global_dir }}/defaults/pref"
+          state: directory
+          mode: '0755'
+
+      - name: Create autoconfig.js for system-wide preferences
+        copy:
+          dest: "{{ firefox_global_dir }}/defaults/pref/autoconfig.js"
+          content: |
+            pref("general.config.filename", "mozilla.cfg");
+            pref("general.config.obscure_value", 0);
+          mode: '0644'
+
+      - name: Create mozilla.cfg for system-wide enforced preferences
+        copy:
+          dest: "{{ firefox_global_dir }}/mozilla.cfg"
+          content: |
+            // Mozilla AutoConfig File
+            lockPref("general.config.sandbox_enabled", false);
+            {% for key, value in firefox_preferences.items() %}
+            lockPref("{{ key }}", {{ value | to_json }});
+            {% endfor %}
+          mode: '0644'
+
+      - name: Find all user Firefox profile directories
+        shell: ls -d /Users/*/Library/Application\ Support/Firefox/Profiles/*.default-release
+        register: user_profiles
+        changed_when: false
+
+      - name: Ensure chrome directories exist in each profile for userChrome.css
+        file:
+          path: "{{ item }}/chrome"
+          state: directory
+          mode: '0755'
+        loop: "{{ user_profiles.stdout_lines }}"
+
+      - name: Deploy userChrome.css for each user
+        copy:
+          dest: "{{ item }}/chrome/userChrome.css"
           content: |
             #TabsToolbar {
               visibility: collapse !important;
@@ -620,7 +416,114 @@
             #sidebar-header {
               visibility: collapse !important;
             }
-            #sidebar {
-              width: 400px !important;
-            }
+          mode: '0644'
+        become: yes
+        loop: "{{ user_profiles.stdout_lines }}"
+
+      - name: Restart Firefox
+        shell: pkill firefox || true
+        ignore_errors: yes
+
+      always:
+        - name: Notify that Firefox system-wide setup is complete
+          debug:
+            msg: "Firefox system-wide extensions and preferences have been applied successfully!"
+
       tags: firefox
+
+    - name: Create Screenshots directory in Downloads
+      file:
+        path: "{{ lookup('env', 'HOME') }}/Downloads/Screenshots"
+        state: directory
+
+    - name: Configure macOS settings
+      shell: |
+        # Show hidden files in Finder
+        defaults write com.apple.finder AppleShowAllFiles -bool true
+
+        # Show path bar in Finder
+        defaults write com.apple.finder ShowPathbar -bool true
+
+        # Show status bar in Finder
+        defaults write com.apple.finder ShowStatusBar -bool true
+
+        # Hide the macOS top menu bar (compatible with newer macOS versions)
+        defaults write NSGlobalDomain AppleMenuBarVisibleInFullscreen -bool false
+        defaults write com.apple.menuextra.clock IsMenuVisible -bool false
+        defaults write com.apple.controlcenter "NSStatusItem Visible Bluetooth" -bool false
+        defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false
+        defaults write com.apple.controlcenter "NSStatusItem Visible Sound" -bool false
+
+        # Autohide the Dock
+        defaults write com.apple.dock autohide -bool true
+        defaults write com.apple.dock autohide-time-modifier -float 0.15
+
+        # Enable Touch ID for sudo authentication
+        if ! grep -q "pam_tid.so" /etc/pam.d/sudo; then
+          sudo bash -c 'echo "auth       sufficient     pam_tid.so" | cat - /etc/pam.d/sudo > /tmp/sudo.new && mv /tmp/sudo.new /etc/pam.d/sudo'
+        fi
+
+        # Disable press-and-hold for keys in favor of key repeat
+        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+        # Set a faster keyboard repeat rate
+        defaults write NSGlobalDomain KeyRepeat -int 1
+        #defaults write NSGlobalDomain InitialKeyRepeat -int 15
+
+        # Disable auto-correct
+        defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+        # Require password immediately after sleep or screen saver begins
+        defaults write com.apple.screensaver askForPassword -int 1
+        defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+        # Save screenshots to the Screenshots directory in Downloads
+        defaults write com.apple.screencapture location -string "${HOME}/Downloads/Screenshots"
+
+        # Save screenshots in PNG format
+        defaults write com.apple.screencapture type -string "png"
+
+        # Disable shadow in screenshots
+        defaults write com.apple.screencapture disable-shadow -bool true
+
+        # Enable tap to click
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+        defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+
+        # Enable three finger drag
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
+        defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+
+        # Disable "natural" scrolling
+        defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+
+        # Expand save panel by default
+        defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+        defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+        # Expand print panel by default
+        defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+        defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+
+        # Disable the "Are you sure you want to open this application?" dialog
+        defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+        # Set keyboard layout to US
+        defaults write NSGlobalDomain AppleLocale -string "en_US"
+        defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
+        # Set move mouse on focus
+        defaults write com.apple.Terminal FocusFollowsMouse -bool true
+
+        # Set AppleFontSmoothing for Alacritty (replaces use_thin_strokes)
+        #defaults write -g AppleFontSmoothing -int 0
+
+        # Restart affected applications
+        killall Finder
+        killall SystemUIServer
+        killall Dock
+        killall AeroSpace || true
+      tags: macos-settings
+
+
+

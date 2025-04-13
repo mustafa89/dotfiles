@@ -1,39 +1,106 @@
-# Dotfiles
+# macOS Dotfiles
 
-- This repo contains all the files necessary to set up a workstation.
-- The set up is mainly done by ansible and [DotBot](https://github.com/anishathalye/dotbot).
-- Run the make commands below to get started. :)
+This repository contains my personal dotfiles and setup scripts for macOS. It uses Ansible to automate the setup of a new macOS system with all the tools and configurations I use.
+
+## Prerequisites
+
+- macOS (tested on Monterey and newer)
+- Command Line Tools for Xcode (will be installed automatically if missing)
+- Python 3 (comes with macOS, but you can install the latest version with the official installer from python.org)
 
 ## Installation
 
-- To set up our workstation we must first execute `sudo make setup`.
-  This will install ansible and necessary packages to run the main ansible `playbook`.
-- Once done, we can then run `make init`. Provide your sudo password.
-  > This is needed the for the first time.
-- Now run `make run`
-  This will run the main ansible `playbook.yml` that will setup the work station.
-  > `make check` can also be run which will run the ansible playbook in checkmode.
-- When the playbook has run to completion.
-  - Reboot your system.
-  - Log in (but this time click on the setting button next to the login button and select `i3`)
-  - Open the terminal `Alt+Enter` and walaah!!
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/dotfiles.git
+   cd dotfiles
+   ```
 
-The workstation should look something like this when done.
-![fig1](images/dotsmulti.png)
-![fig2](images/dotfiles.png)
+2. Run the setup script to install prerequisites:
+   ```bash
+   make setup
+   ```
 
-# Command Reference
+3. Run the initialization step:
+   ```bash
+   make init
+   ```
+   > This will check for Xcode Command Line Tools, set up passwordless sudo, and ensure proper permissions.
 
-| Command       |                                                                                     Desciption |
-| ------------- | ---------------------------------------------------------------------------------------------: |
-| `make setup`  |                                     Bootstraps the packages required to run the main playbook. |
-| `make init`   |                                                 Sets up proper sudo access for the first time. |
-| `make run`    |                                    Executes the main ansible playbook and installs everything. |
-| `make check`  |                                                         Runs the main playbooks in check mode. |
-| `make tag`    | Runs the main playbook with a specific tags. make tag tags="<one or comma sep. multiple tags>" |
-| `make update` |                                          Runs the main playbook to only update the workstation |
+4. Install everything:
+   ```bash
+   make install
+   ```
 
-# Credits
+5. After the playbook completes, restart your terminal to apply all changes.
+
+## What's Included
+
+- **Homebrew** packages and casks
+- **Shell**: Zsh with Oh-My-Zsh and Powerlevel10k theme
+- **Terminal**: iTerm2 with custom configuration
+- **Window Management**: Rectangle
+- **Development Tools**: 
+  - Neovim with plugins
+  - Visual Studio Code
+  - Docker
+  - Kubernetes tools (kubectl, kubectx, kubens, minikube)
+  - Go, Node.js (via nvm), Python
+  - Git configuration
+- **Browsers**: Brave with productivity extensions
+- **macOS Settings**: Sensible defaults for macOS
+- **System Configuration**: Passwordless sudo for convenience
+
+## Command Reference
+
+| Command       | Description                                                                        |
+| ------------- | ---------------------------------------------------------------------------------- |
+| `make setup`  | Bootstraps the packages required to run the main playbook                          |
+| `make init`   | Sets up initial macOS environment (Xcode tools, passwordless sudo)                 |
+| `make install`| Executes the main ansible playbook and installs everything                         |
+| `make update` | Updates system packages                                                            |
+| `make packages`| Installs all packages                                                             |
+| `make zsh`    | Sets up Zsh, Oh-My-Zsh, and plugins                                               |
+| `make vim`    | Sets up Vim/Neovim                                                                 |
+| `make docker` | Sets up Docker                                                                     |
+| `make firefox`| Sets up Firefox with extensions                                                    |
+| `make macos`  | Configures macOS settings                                                          |
+| `make sudo`   | Sets up passwordless sudo                                                          |
+| `make dotbot` | Just links dotfiles without installing packages                                    |
+| `make check`  | Runs the main playbook in check mode                                               |
+| `make tag`    | Runs the main playbook with specific tags: `make tag tags="tag1,tag2"`             |
+
+## Partial Installation
+
+You can install specific components using the make targets listed in the Command Reference above.
+
+## Customization
+
+### Adding New Dotfiles
+
+1. Add your dotfile to the `dotfiles/` directory
+2. Update `install.conf.yaml` to include your new dotfile
+
+### Modifying Installed Packages
+
+Edit `playbook.yml` and modify the package lists under the `packages` or `cask_packages` variables.
+
+## Key Tools and Their Configurations
+
+### Zsh Configuration
+
+- Powerlevel10k theme
+- Useful aliases and functions
+- Git integration
+- Syntax highlighting and autosuggestions
+
+## Troubleshooting
+
+- **Homebrew installation fails**: Make sure you have full disk access for Terminal/iTerm2
+- **Permission issues**: Some operations might require sudo access
+- **Ansible errors**: Make sure you have the latest version of Ansible installed
+
+## Credits
 
 - [zsh](https://www.zsh.org/)
 - [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)
@@ -45,14 +112,10 @@ The workstation should look something like this when done.
 - [Brave Browser](https://brave.com/)
 - [VScode](https://code.visualstudio.com/)
 - [Neovim](https://github.com/neovim/neovim)
-- [i3gaps](https://github.com/Airblader/i3)
+- [Rectangle](https://rectangleapp.com/)
 
-And also a large number of vim plugins and third party packages. Thankyou for the awesome OS projects.
+And also a large number of vim plugins and third party packages. Thank you for the awesome open source projects.
 
-## Considerations
+## License
 
-- Currently this repo is fully compatible with Ubuntu 18.04 and 20.04.
-- The playbook will set everything up for the user who is running the playbook. Basically for the $(whoami) user.
-- [DotBot](https://github.com/anishathalye/dotbot) is used to connect the actual dotfiles.
-- Deoplete may require running `:UpdateRemotePlugins` the first time.
-- If `zsh` doesn't start, we have to manully `chsh -s $(which zsh)` as well in some case.
+MIT

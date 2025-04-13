@@ -78,8 +78,8 @@ set synmaxcol=180
 set ttyfast
 
 "=====KEY BINDINGS======="
-nnoremap <C-Left> :tabprevious<CR>
-nnoremap <C-Right> :tabnext<CR>
+nnoremap <C-k> :tabprevious<CR>
+nnoremap <C-l> :tabnext<CR>
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 " Comment line(s)
 :vnoremap <C-c> :norm i#<CR>
@@ -126,13 +126,4 @@ filetype plugin indent on
 "----------------------------------------------------------
 " Neovim's Python provider
 "----------------------------------------------------------
-"let g:python_host_prog  = '/usr/bin/python'
-let g:python_host_prog = '/usr/bin/python3'
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#omni_patterns = {}
-"call deoplete#custom#option('omni_patterns', {
-"\ 'complete_method': 'omnifunc',
-"\ 'terraform': '[^ *\t"{=$]\w*',
-"\})
-call deoplete#initialize()
 

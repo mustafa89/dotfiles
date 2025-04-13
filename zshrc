@@ -1,15 +1,17 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+#fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/Users/mustafa.mujahid/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -83,7 +85,7 @@ plugins=(
 git
 vagrant
 vagrant-prompt
-ubuntu
+macos
 colorize
 zsh-autosuggestions
 zsh-syntax-highlighting
@@ -96,6 +98,7 @@ kubectl
 helm
 fzf
 asdf
+brew
 )
 
 fpath+=${ZSH:-~/.oh-my-zsh/}completions
@@ -117,7 +120,7 @@ source $ZSH/oh-my-zsh.sh
 # fi
 
 # Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+export ARCHFLAGS="-arch $(uname -m)"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -130,15 +133,6 @@ source $ZSH/oh-my-zsh.sh
 
 alias vim='nvim'
 alias vi='nvim'
-alias vssh='vagrant ssh'
-alias vup='vagrant up'
-alias vdes='vagrant destroy'
-alias vrel='vagrant reload'
-alias vhal='vagrant halt'
-alias vst='vagrant status'
-alias wwp='cd ~/Downloads/projects'
-alias ww='cd /sysops/infrastructure'
-alias wwt='cd /sysops/temp/infrastructure'
 alias gst="git status"
 alias gd="git diff"
 alias gdc="git diff --cached"
@@ -152,19 +146,26 @@ alias gstl='git stash list'
 alias gstp='git stash pop'
 alias gollf='git log --name-only --pretty=oneline --full-index'
 alias cat='bat --paging never'
-alias rcat='cat'
+alias rcat='/bin/cat'
 alias gf='git fetch'
 alias aws1='cd ~/aws'
 alias main='cd /code'
-alias copy="xclip -sel clip"
-alias wquit="sudo python ~/wqavim.py"
-alias tquit="sudo python ~/terms.py"
-alias dots="cd ~/Desktop/dotfiles"
+alias copy="pbcopy"
+alias dots="cd ~/Documents/dotfiles"
 alias gs="git status"
 alias gcpa="git cherry-pick --abort"
 alias master="git checkout origin/master"
 alias ctx="kubectx"
 alias ens="kubens"
+alias ls="ls -G"
+alias ll="ls -la"
+alias at="cd ~/code/infra-core"
+alias lmods="cd ~/code/infra-core/local-modules"
+alias dev="cd ~/code/infra-core/infrastructure/codility-dev"
+alias prod="cd ~/code/infra-core/infrastructure/codility/prod"
+alias stg="cd ~/code/infra-core/infrastructure/codility/staging"
+alias lt="cd ~/code/infra-core/infrastructure/codility/locust"
+alias cde="cd ~/code"
 
 [ -f ~/.work_related_aliases ] && source ~/.work_related_aliases
 
@@ -183,11 +184,6 @@ gfpo() {
 
 gpo() {
   git push origin $(git status | head -1 | cut -d ' ' -f3)
-}
-
-
-sai() {
-sudo apt install $@
 }
 
 lc() {
@@ -213,6 +209,10 @@ ggp() {
 
 fu() {
   tg force-unlock "$@"
+}
+
+gci() {
+  git co $(git branch -v |fzf | awk '{print $1}')
 }
 
 
@@ -257,39 +257,37 @@ terraform {
 EOF
 }
 
+tg () {
+	if [[ "$(pwd)" =~ /code/infrastructure ]]
+	then
+		/code/infrastructure/scripts/terragrunt.sh "$@"
+	else
+		~/bin/terragrunt "$@"
+	fi
+}
+
 function wttr(){ curl -H "Accept-Language: ${LANG%_*}" wttr.in/"${1:-Ansbach}"}
 function ipv4(){ curl -4 canhazip.com }
 alias my='mycli --login-path'
-#source $(dirname $(gem which colorls))/tab_complete.sh
-
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/terraform terraform
 
-#export TF_PLUGIN_CACHE_DIR=~/plugin-cache
-
-export GOROOT=/usr/local/go
-export PATH=$PATH:$GOROOT/bin
-export GOPATH=~/go/packages
-export PATH=$PATH:$GOPATH/bin
-export GOPATH=$GOPATH:~/aws/go
-export GOBIN=$GOPATH/bin
-
-export XDG_CONFIG_HOME="$HOME/.config"
+# Go configuration
+export GOPATH=$HOME/go
+export GOROOT="$(brew --prefix golang)/libexec"
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
 # setup export for node nvm
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+export NVM_DIR=~/.nvm
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # To customize prompt, run `p10k configure` or edit ~/dots-repo/dotfiles/p10k.zsh.
-[[ ! -f ~/dots-repo/dotfiles/p10k.zsh ]] || source ~/dots-repo/dotfiles/p10k.zsh
-
-
-export PATH=$PATH:/code/devel-tools/aws-sso/bin
-#export PATH=$PATH:/home/mustafa/bin
+[[ ! -f ~/Documents/dotfiles/p10k.zsh ]] || source ~/Documents/dotfiles/p10k.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
@@ -297,3 +295,7 @@ export PATH=$PATH:/code/devel-tools/aws-sso/bin
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+
+# Add Visual Studio Code (code)
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
